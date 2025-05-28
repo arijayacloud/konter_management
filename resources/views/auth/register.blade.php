@@ -14,7 +14,7 @@
                 <img class="img-fluid" src="{{ asset('images/register.jpg')}}" alt="register">
             </div>
             <div class="col d-flex align-items-center justify-content-center bg-white">
-                <div class="w-lg-50 w-sm-75 h-auto">
+                <div class="w-sm-75 w-lg-50  h-auto">
                     <div class="text-center mb-4">
                       <h1 class="fw-bold fs-4 fs-sm-3 fs-md-2">Create Your Account</h1>
                       <p class="text-muted fs-6 fs-sm-6 fs-md-5">Please fill in the form to register</p>
