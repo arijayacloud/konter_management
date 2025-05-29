@@ -50,7 +50,7 @@
         transition: margin-left 0.3s ease;
       }
       /* Sembunyikan label teks */
-      nav.sidebar .nav-link span.text-label {
+      nav.sidebar .nav-link span.text-label, button.text-label {
         display: none;
       }
       /* Center icon */
@@ -70,8 +70,8 @@
     }
     nav.sidebar .nav-link:hover,
     nav.sidebar .nav-link.active {
-      background-color: #495057;
-      color: white;
+      background-color: white;
+      color: #0d6efd;
     }
 
     nav.sidebar .nav-link i {
@@ -94,29 +94,36 @@
   </style>
 </head>
 <body>
-  <nav class="sidebar bg-primary">
-    <h4 class="d-none d-md-block">Menu</h4>
-    <ul class="nav flex-column">
-      <li class="nav-item mb-2">
-        <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-          <i class="bi bi-speedometer2"></i>
-          <span class="text-label ms-2">Dashboard</span>
-        </a>
-      </li>
-      <li class="nav-item mb-2">
-        <a href="{{ route('list') }}" class="nav-link {{ request()->routeIs('list') ? 'active' : '' }}">
-          <i class="bi bi-list-ul"></i>
-          <span class="text-label ms-2">List</span>
-        </a>
-      </li>
-    </ul>
+  <nav class="sidebar bg-primary d-flex flex-column gap-3">
+    <div class="w-75 bg-white rounded align-self-center overflow-hidden">
+        <img class="img-fluid" src="{{ asset('images/logo.jpg')}}" alt="logo">
+    </div>
+    <div class="d-flex flex-column grow-1 justify-content-between">
+        <ul class="flex flex-column p-0">
+          <li class="nav-item mb-2">
+            <a href="{{ route('dashboard') }}" class="nav-link mx-3 rounded {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+              <i class="bi bi-speedometer2"></i>
+              <span class="text-label ms-2">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item mb-2">
+            <a href="{{ route('list') }}" class="nav-link mx-3 rounded {{ request()->routeIs('list') ? 'active' : '' }}">
+              <i class="bi bi-list-ul"></i>
+              <span class="text-label ms-2">List</span>
+            </a>
+          </li>
+        </ul>
+        <form class="mb-4 nav-item" action="{{ route('logout') }}" method="POST">
+            @csrf
+            <div class="nav-link mx-3 rounded">
+                <i class="bi bi-box-arrow-left"></i>
+                <button class="text-label ms-2" type="submit">Logout</button>
+            </div>
+        </form>
+    </div>
   </nav>
 
   <main class="content bg-light">
-    <form action="{{ route('logout') }}" method="POST">
-        @csrf
-        <button type="submit">Logout</button>
-    </form>
     <h1>@yield('title')</h1>
     @yield('content')
   </main>
