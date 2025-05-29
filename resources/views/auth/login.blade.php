@@ -17,7 +17,7 @@
                       <p class="text-muted fs-6 fs-sm-6 fs-md-6">Enter your email and password to access your account.</p>
                     </div>
 
-                    <form class="mt-5 w-75 mx-auto">
+                    <form method="POST" action="/login" class="mt-5 w-75 mx-auto">
                       <div class="mb-3">
                         <label for="email" class="form-label fs-6 fs-sm-6 fs-md-5">Email address</label>
                         <input type="email" class="form-control" id="email" placeholder="name@example.com" required>
