@@ -27,3 +27,9 @@ Route::post('/login', [AuthController::class, 'login'])->middleware(RedirectIfAu
 Route::post('/logout', [AuthController::class, 'logout'])->middleware(AuthCustom::class)->name('logout');
 Route::get('/dashboard', [AuthController::class, 'dashboard'])->middleware(AuthCustom::class)->name('dashboard');
 Route::get('/list', [AuthController::class, 'list'])->middleware(AuthCustom::class)->name('list');
+
+use App\Http\Controllers\PaymentController;
+
+Route::post('/payments', [PaymentController::class, 'create'])->middleware(AuthCustom::class)->name('create');  // Menyimpan data pembayaran
+Route::delete('/payments/{id}', [PaymentController::class, 'destroy'])->middleware(AuthCustom::class)->name('destroy');
+

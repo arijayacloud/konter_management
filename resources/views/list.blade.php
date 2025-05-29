@@ -5,7 +5,7 @@
         <div class="row gap-4 mb-4">
 
             <div class="col">
-                <div class="card shadow-md h-100 border-0">
+                <div class="card justify-content-between shadow-md h-100 border-0">
                   <div class="m-3 mb-0">
                     <div class="d-flex align-items-center mb-3">
                       <div class="bg-primary-subtle text-primary rounded px-3 py-2 me-3">
@@ -17,7 +17,7 @@
                       </div>
                     </div>
                     <hr />
-                    <h2 class="fw-bold text-dark">20</h2>
+                    <h2 class="fw-bold text-dark">{{ $paymentsCount }}</h2>
                   </div>
                   <div class="w-100 h-[40px] bg-light">
                   </div>
@@ -25,7 +25,7 @@
               </div>
 
             <div class="col">
-                <div class="card shadow-md h-100 border-0">
+                <div class="card shadow-md h-100 border-0 justify-content-between">
                   <div class="m-3 mb-0">
                     <div class="d-flex align-items-center mb-3">
                       <div class="bg-primary-subtle text-primary rounded px-3 py-2 me-3">
@@ -37,7 +37,7 @@
                       </div>
                     </div>
                     <hr />
-                    <h2 class="fw-bold text-dark">Rp 1,000,000</h2>
+                    <h2 class="fw-bold text-dark">Rp {{ $totalPayment }}</h2>
                   </div>
                   <div class="w-100 h-[40px] bg-light">
                   </div>
@@ -45,7 +45,7 @@
               </div>
 
             <div class="col">
-                <div class="card shadow-md h-100 border-0">
+                <div class="card shadow-md h-100 border-0 justify-content-between">
                   <div class="m-3 mb-0">
                     <div class="d-flex align-items-center mb-3">
                       <div class="bg-primary-subtle text-primary rounded px-3 py-2 me-3">
@@ -57,7 +57,7 @@
                       </div>
                     </div>
                     <hr />
-                    <h2 class="fw-bold text-dark">40</h2>
+                    <h2 class="fw-bold text-dark">{{ $uniqueNamesCount }}</h2>
                   </div>
                   <div class="w-100 h-[40px] bg-light">
                   </div>
@@ -77,12 +77,14 @@
                 <button type="button" class="btn btn-light text-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#exampleModal">
                   <i class="bi bi-plus me-2"></i> Add
                 </button>
-                <div class="input-group">
-                  <input type="text" class="form-control" placeholder="Search...">
-                  <button class="btn btn-outline-light" type="button">
-                    <i class="bi bi-search"></i>
-                  </button>
-                </div>
+                <form method="GET" action="{{ route('list') }}">
+                    <div class="input-group">
+                        <input type="text" name="keyword" class="form-control" placeholder="Search..." value="{{ request()->input('keyword') }}">
+                        <button class="btn btn-outline-light" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
               </div>
             </div>
 
@@ -105,8 +107,9 @@
                   </tr>
                 </thead>
                 <tbody>
+                @foreach ($payments as $payment)
                   <tr>
-                    <td>5/25/2025</td>
+                    <td>{{ $payment->tanggal }}</td>
                     <td>Tarik Tunai</td>
                     <td>AE CELL</td>
                     <td>BRI</td>
@@ -119,30 +122,26 @@
                         <button class="btn btn-sm btn-outline-primary" title="Edit" data-bs-toggle="modal" data-bs-target="#exampleModal">
                           <i class="bi bi-pencil-square"></i>
                         </button>
-                        <button class="btn btn-sm btn-outline-danger" title="Delete">
-                          <i class="bi bi-trash"></i>
-                        </button>
+                        <form action="{{ route('destroy', $payment->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this transaction?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                              <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
                         <button class="btn btn-sm btn-outline-secondary" title="Print">
                           <i class="bi bi-printer"></i>
                         </button>
                       </div>
                     </td>
                   </tr>
+                  @endforeach
                 </tbody>
               </table>
             </div>
-
-            <!-- Pagination -->
-            <div class="d-flex justify-content-end m-3">
-              <nav aria-label="Page navigation">
-                <ul class="pagination pagination-sm mb-0">
-                  <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                  <li class="page-item"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item active"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                  <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                </ul>
-              </nav>
+            <!-- Pagination Links -->
+            <div class="m-3">
+                {{ $payments->links() }}
             </div>
 
           </div>
@@ -157,45 +156,46 @@
             <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-        <form>
+        <form method="POST" action="{{ route('create') }}">
+            @csrf
           <div class="modal-body">
 
                 <div class="flex justify-content-between gap-3">
                   <div class="mb-3">
                     <label for="tanggal" class="form-label">Tanggal</label>
-                    <input type="date" name="tanggal" class="form-control" id="tanggal">
+                    <input type="date" name="tanggal" class="form-control" id="tanggal" required>
                   </div>
                   <div class="mb-3">
                     <label for="jenisLayanan" class="form-label">Jenis Layanan</label>
-                    <input type="text" name="jenisLayanan" class="form-control" id="jenisLayanan">
+                    <input type="text" name="jenis_layanan" class="form-control" id="jenisLayanan" required>
                   </div>
                 </div>
                 <div class="mb-3">
                     <label for="lokasiKonter" class="form-label">Lokasi Konter</label>
-                    <input type="text" name="lokasiKonter" class="form-control" id="lokasiKonter">
+                    <input type="text" name="lokasi_konter" class="form-control" id="lokasiKonter" required>
                 </div>
                 <div class="flex justify-content-between gap-3">
                   <div class="mb-3">
                     <label for="namaBank" class="form-label">Nama Bank</label>
-                    <input type="text" name="namaBank" class="form-control" id="namaBank">
+                    <input type="text" name="nama_bank" class="form-control" id="namaBank" required>
                   </div>
                   <div class="mb-3">
                     <label for="nomorRekening" class="form-label">Nomor Rekening</label>
-                    <input type="text" name="nomorRekening" class="form-control" id="nomorRekening">
+                    <input type="number" name="nomor_rekening" class="form-control" id="nomorRekening" required>
                   </div>
                 </div>
                 <div class="mb-3">
                     <label for="atasNama" class="form-label">Atas Nama</label>
-                    <input type="text" name="atasNama" class="form-control" id="atasNama">
+                    <input type="text" name="atas_nama" class="form-control" id="atasNama" required>
                 </div>
                 <div class="flex justify-content-between gap-3">
                   <div class="mb-3">
                     <label for="jumlahTransfer" class="form-label">Jumlah Transfer</label>
-                    <input type="text" name="jumlahTransfer" class="form-control" id="jumlahTransfer">
+                    <input type="number" name="jumlah_transfer" class="form-control" id="jumlahTransfer" required>
                   </div>
                   <div class="mb-3">
                     <label for="adminTransfer" class="form-label">Admin Transfer</label>
-                    <input type="text" name="adminTransfer" class="form-control" id="adminTransfer">
+                    <input type="number" name="admin_transfer" class="form-control" id="adminTransfer" required>
                   </div>
                 </div>
           </div>

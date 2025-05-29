@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Payment;
 
 class AuthController extends Controller
 {
@@ -81,7 +82,48 @@ class AuthController extends Controller
 
     public function list(Request $request)
     {
+
+         // Ambil query pencarian dari input search
+        $keyword = $request->input('keyword');  // 'search' adalah nama parameter query dari input form
+
+        // Jika ada query pencarian, cari di database
+        if ($keyword) {
+            // Misalnya kita mencari berdasarkan 'jenis_layanan', 'lokasi_konter', atau 'atas_nama'
+             $payments = Payment::where('jenis_layanan', 'LIKE', "%{$keyword}%")
+                ->orWhere('lokasi_konter', 'LIKE', "%{$keyword}%")
+                ->orWhere('nama_bank', 'LIKE', "%{$keyword}%")
+                ->orWhere('nomor_rekening', 'LIKE', "%{$keyword}%")
+                ->orWhere('atas_nama', 'LIKE', "%{$keyword}%")
+                ->orWhere('jumlah_transfer', 'LIKE', "%{$keyword}%")
+                ->orWhere('admin_transfer', 'LIKE', "%{$keyword}%")
+                ->paginate(10); // Pagination 10 results per page
+        } else {
+            // Jika tidak ada pencarian, ambil semua data
+            $payments = Payment::paginate(10);
+        }
+        // $payments = Payment::all();  // Ambil semua data pembayaran dari database
+        // $payments = Payment::paginate(1);
+
         $userName = $request->session()->get('user_name');
-        return view('list', compact('userName'));
+        $paymentsCount = Payment::count();
+
+        $totalPayment = 0;
+        foreach (Payment::all() as $payment) {
+            // Ambil nilai jumlah_transfer yang disimpan sebagai string (misalnya "Rp 1.000.000")
+            $paymentString = $payment->jumlah_transfer;
+
+            // Bersihkan simbol 'Rp' dan hapus koma (jika ada)
+            $cleanedPayment = str_replace(['Rp', '.', ','], '', $paymentString);
+
+            // Ubah menjadi integer (angka)
+            $payment = (int) $cleanedPayment;
+
+            // Tambahkan ke total pembayaran
+            $totalPayment += $payment;
+        }
+
+        $uniqueNamesCount = Payment::distinct('atas_nama')->count('atas_nama');
+
+        return view('list', compact('userName', 'payments', 'paymentsCount', 'totalPayment', 'uniqueNamesCount'));
     }
 }
