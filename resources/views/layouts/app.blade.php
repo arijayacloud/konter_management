@@ -88,7 +88,7 @@
 
     /* Konten utama */
     main.content {
-      padding: 1rem;
+      padding: 0;
       min-height: 100vh;
     }
   </style>
@@ -123,8 +123,7 @@
     </div>
   </nav>
 
-  <main class="content bg-light">
-    <h1>@yield('title')</h1>
+  <main class="content">
     @yield('content')
   </main>
 </body>
