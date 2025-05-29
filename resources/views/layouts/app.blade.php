@@ -111,15 +111,12 @@
       </li>
     </ul>
   </nav>
-    <form method="POST" action="/logout" style="display: none;" id="logout-form">
-      @csrf
-    </form>
-
-    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-      Logout
-    </a>
 
   <main class="content bg-light">
+    <form action="{{ route('logout') }}" method="POST">
+        @csrf
+        <button type="submit">Logout</button>
+    </form>
     <h1>@yield('title')</h1>
     @yield('content')
   </main>
