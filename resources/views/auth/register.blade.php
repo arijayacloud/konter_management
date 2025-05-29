@@ -36,11 +36,6 @@
                         <input type="password" class="form-control" id="password" placeholder="Enter password" required>
                       </div>
 
-                      <div class="mb-4">
-                        <label for="confirm-password" class="form-label fs-6 fs-sm-6 fs-md-5">Confirm Password</label>
-                        <input type="password" class="form-control" id="confirm-password" placeholder="Repeat password" required>
-                      </div>
-
                       <button type="submit" class="btn btn-primary w-100 fs-6 fs-sm-5">Register</button>
                     </form>
 
