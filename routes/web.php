@@ -32,4 +32,4 @@ use App\Http\Controllers\PaymentController;
 
 Route::post('/payments', [PaymentController::class, 'create'])->middleware(AuthCustom::class)->name('create');  // Menyimpan data pembayaran
 Route::delete('/payments/{id}', [PaymentController::class, 'destroy'])->middleware(AuthCustom::class)->name('destroy');
-
+Route::put('/payments', [PaymentController::class, 'update'])->middleware(AuthCustom::class)->name('update');

@@ -28,6 +28,36 @@ class PaymentController extends Controller
 
         return redirect()->route('list');  // Setelah disimpan, redirect ke halaman daftar pembayaran
     }
+    public function update(Request $request)
+    {
+        // Validasi input
+        $validatedData = $request->validate([
+            'id' => 'required|exists:payments,id',
+            'tanggal' => 'required|date',
+            'jenis_layanan' => 'required|string',
+            'lokasi_konter' => 'required|string',
+            'nama_bank' => 'required|string',
+            'nomor_rekening' => 'required|string',
+            'atas_nama' => 'required|string',
+            'jumlah_transfer' => 'required|string',
+            'admin_transfer' => 'required|string',
+        ]);
+
+        $payment = Payment::findOrFail($request->id);
+
+        $payment->update([
+            'tanggal' => $validatedData['tanggal'],
+            'jenis_layanan' => $validatedData['jenis_layanan'],
+            'lokasi_konter' => $validatedData['lokasi_konter'],
+            'nama_bank' => $validatedData['nama_bank'],
+            'nomor_rekening' => $validatedData['nomor_rekening'],
+            'atas_nama' => $validatedData['atas_nama'],
+            'jumlah_transfer' => $validatedData['jumlah_transfer'],
+            'admin_transfer' => $validatedData['admin_transfer'],
+        ]);
+
+        return redirect()->route('list');  // Setelah disimpan, redirect ke halaman daftar pembayaran
+    }
     public function destroy($id) {
         $payment = Payment::findOrFail($id);
 

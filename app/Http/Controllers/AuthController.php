@@ -86,17 +86,19 @@ class AuthController extends Controller
          // Ambil query pencarian dari input search
         $keyword = $request->input('keyword');  // 'search' adalah nama parameter query dari input form
 
+        $keyword = strtolower($keyword);
+
         // Jika ada query pencarian, cari di database
         if ($keyword) {
             // Misalnya kita mencari berdasarkan 'jenis_layanan', 'lokasi_konter', atau 'atas_nama'
-             $payments = Payment::where('jenis_layanan', 'LIKE', "%{$keyword}%")
-                ->orWhere('lokasi_konter', 'LIKE', "%{$keyword}%")
-                ->orWhere('nama_bank', 'LIKE', "%{$keyword}%")
-                ->orWhere('nomor_rekening', 'LIKE', "%{$keyword}%")
-                ->orWhere('atas_nama', 'LIKE', "%{$keyword}%")
-                ->orWhere('jumlah_transfer', 'LIKE', "%{$keyword}%")
-                ->orWhere('admin_transfer', 'LIKE', "%{$keyword}%")
-                ->paginate(10); // Pagination 10 results per page
+                $payments = Payment::whereRaw('LOWER(jenis_layanan) LIKE ?', ["%{$keyword}%"])
+                    ->orWhereRaw('LOWER(lokasi_konter) LIKE ?', ["%{$keyword}%"])
+                    ->orWhereRaw('LOWER(nama_bank) LIKE ?', ["%{$keyword}%"])
+                    ->orWhereRaw('LOWER(nomor_rekening) LIKE ?', ["%{$keyword}%"])
+                    ->orWhereRaw('LOWER(atas_nama) LIKE ?', ["%{$keyword}%"])
+                    ->orWhereRaw('LOWER(jumlah_transfer) LIKE ?', ["%{$keyword}%"])
+                    ->orWhereRaw('LOWER(admin_transfer) LIKE ?', ["%{$keyword}%"])
+                    ->paginate(10); // Pagination 10 results per page
         } else {
             // Jika tidak ada pencarian, ambil semua data
             $payments = Payment::paginate(10);
