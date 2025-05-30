@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <main class="container-fluid h-[100dvh] p-4 flex flex-column">
-        <div class="row gap-4 mb-4">
-
+    <main class="container-fluid h-[100dvh] flex flex-column" >
+        <div id="rowInfo" class="gap-4 mb-4">
             <div class="col">
                 <div class="card justify-content-between shadow-md h-100 border-0">
                   <div class="m-3 mb-0">
@@ -11,7 +10,7 @@
                       <div class="bg-primary-subtle text-primary rounded px-3 py-2 me-3">
                         <i class="bi bi-cash-stack fs-4"></i>
                       </div>
-                      <div>
+                      <div class="">
                         <h5 class="card-title mb-0">Total Transaction</h5>
                         <small class="text-muted">From store transaction</small>
                       </div>
@@ -28,30 +27,10 @@
                 <div class="card shadow-md h-100 border-0 justify-content-between">
                   <div class="m-3 mb-0">
                     <div class="d-flex align-items-center mb-3">
-                      <div class="bg-danger-subtle text-danger rounded px-3 py-2 me-3">
-                        <i class="bi bi-bank fs-4"></i>
-                      </div>
-                      <div>
-                        <h5 class="card-title mb-0">Admin Transfers</h5>
-                        <small class="text-muted">Total from admin transfer</small>
-                      </div>
-                    </div>
-                    <hr />
-                    <h2 class="fw-bold text-dark">Rp {{ number_format($totalPayment, 0, ',', '.') }}</h2>
-                  </div>
-                  <div class="w-100 h-[40px] bg-light">
-                  </div>
-                </div>
-              </div>
-
-            <div class="col">
-                <div class="card shadow-md h-100 border-0 justify-content-between">
-                  <div class="m-3 mb-0">
-                    <div class="d-flex align-items-center mb-3">
                       <div class="bg-success-subtle text-success rounded px-3 py-2 me-3">
                         <i class="bi bi-person-fill fs-4"></i>
                       </div>
-                      <div>
+                      <div class="">
                         <h5 class="card-title mb-0">Total User</h5>
                         <small class="text-muted">Total user from user count</small>
                       </div>
@@ -63,7 +42,28 @@
                   </div>
                 </div>
               </div>
+
+            <div class="col">
+                <div class="card shadow-md h-100 border-0 justify-content-between">
+                  <div class="m-3 mb-0">
+                    <div class="d-flex align-items-center mb-3">
+                      <div class="bg-danger-subtle text-danger rounded px-3 py-2 me-3">
+                        <i class="bi bi-bank fs-4"></i>
+                      </div>
+                      <div class="">
+                        <h5 class="card-title mb-0">Admin Transfers</h5>
+                        <small class="text-muted">Total from admin transfer</small>
+                      </div>
+                    </div>
+                    <hr />
+                    <h2 class="fw-bold text-dark">Rp {{ number_format($totalPayment, 0, ',', '.') }}</h2>
+                  </div>
+                  <div class="w-100 h-[40px] bg-light">
+                  </div>
+                </div>
+              </div>
         </div>
+
         <div class="bg-white shadow-md rounded-3 grow-1 rounded-2 overflow-hidden">
           <div class="d-flex flex-column h-100">
 
@@ -73,8 +73,8 @@
                 <h4 class="mb-1">Transaction</h4>
                 <p class="mb-0">Latest transactions sales in time</p>
               </div>
-              <div class="d-flex gap-2 bg-white p-2 rounded">
-                <button type="button" class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              <div id="formWrapper" class="d-flex gap-2 bg-white p-2 rounded">
+                <button type="button" id="addButton" class="btn btn-primary align-items-center" data-bs-toggle="modal" data-bs-target="#exampleModal">
                   <i class="bi bi-plus me-2"></i> Add
                 </button>
                 <form method="GET" action="{{ route('list') }}">

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container mt-5">
+    <main class="container-fluid">
         <h1 class="text-center text-primary">Welcome in dashboard</h1>
-    </div>
+    </main>
 @endsection
