@@ -32,12 +32,10 @@
                       <button type="submit" class="btn btn-primary w-100 fs-6 fs-sm-5">Login</button>
                     </form>
                     @if ($errors->any())
-                        <div>
-                            <ul>
+                        <div class="w-75 mx-auto mt-3">
                                 @foreach ($errors->all() as $err)
-                                    <li>{{ $err }}</li>
+                                    <div class="alert alert-danger" role="alert">{{ $err }}</div>
                                 @endforeach
-                            </ul>
                         </div>
                     @endif
                     <div class="mt-3 text-center">

@@ -14,7 +14,7 @@
                 <img class="img-fluid" src="{{ asset('images/register.jpg')}}" alt="register">
             </div>
             <div class="col d-flex align-items-center justify-content-center bg-white">
-                <div class="w-sm-75 w-lg-50  h-auto">
+                <div class="w-75 p-lg-5 h-auto">
                     <div class="text-center mb-4">
                       <h1 class="fw-bold fs-4 fs-sm-3 fs-md-2">Create Your Account</h1>
                       <p class="text-muted fs-6 fs-sm-6 fs-md-5">Please fill in the form to register</p>
@@ -40,12 +40,10 @@
                       <button type="submit" class="btn btn-primary w-100 fs-6 fs-sm-5">Register</button>
                     </form>
                     @if ($errors->any())
-                        <div>
-                            <ul>
+                        <div class="w-full mt-3">
                                 @foreach ($errors->all() as $err)
-                                    <li>{{ $err }}</li>
+                                    <div class="alert alert-danger" role="alert">{{ $err }}</div>
                                 @endforeach
-                            </ul>
                         </div>
                     @endif
                     <div class="mt-3 text-center">
