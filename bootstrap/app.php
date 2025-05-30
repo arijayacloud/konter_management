@@ -14,9 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         // $middleware->append(StartSession::class);
-        $middleware->validateCsrfTokens(except: [
-            '*' // <-- exclude this route
-        ]);
+        // $middleware->validateCsrfTokens(except: [
+        //     '*' // <-- exclude this route
+        // ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

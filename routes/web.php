@@ -16,20 +16,20 @@ Route::get('/', function () { return view('welcome'); });
 
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\{AuthCustom, RedirectIfAuthenticatedCustom};
-
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->middleware(RedirectIfAuthenticatedCustom::class)->name('register.form');
-Route::post('/register', [AuthController::class, 'register'])->middleware(RedirectIfAuthenticatedCustom::class)->name('register');
-
-Route::get('/login', [AuthController::class, 'showLoginForm'])->middleware(RedirectIfAuthenticatedCustom::class)->name('login.form');
-Route::post('/login', [AuthController::class, 'login'])->middleware(RedirectIfAuthenticatedCustom::class)->name('login');
-
-
-Route::post('/logout', [AuthController::class, 'logout'])->middleware(AuthCustom::class)->name('logout');
-Route::get('/dashboard', [AuthController::class, 'dashboard'])->middleware(AuthCustom::class)->name('dashboard');
-Route::get('/list', [AuthController::class, 'list'])->middleware(AuthCustom::class)->name('list');
-
 use App\Http\Controllers\PaymentController;
 
-Route::post('/payments', [PaymentController::class, 'create'])->middleware(AuthCustom::class)->name('create');  // Menyimpan data pembayaran
-Route::delete('/payments/{id}', [PaymentController::class, 'destroy'])->middleware(AuthCustom::class)->name('destroy');
-Route::put('/payments', [PaymentController::class, 'update'])->middleware(AuthCustom::class)->name('update');
+Route::middleware([AuthCustom::class])->group(function(){
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
+    Route::get('/list', [AuthController::class, 'list'])->name('list');
+    Route::post('/payments', [PaymentController::class, 'create'])->name('create');  // Menyimpan data pembayaran
+    Route::delete('/payments/{id}', [PaymentController::class, 'destroy'])->name('destroy');
+    Route::put('/payments', [PaymentController::class, 'update'])->name('update');
+});
+
+Route::middleware([RedirectIfAuthenticatedCustom::class])->group(function(){
+    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register.form');
+    Route::post('/register', [AuthController::class, 'register'])->name('register');
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login.form');
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
+});

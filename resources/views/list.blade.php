@@ -73,14 +73,14 @@
                 <h4 class="mb-1">Transaction</h4>
                 <p class="mb-0">Latest transactions sales in time</p>
               </div>
-              <div class="d-flex gap-2">
-                <button type="button" class="btn btn-light text-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              <div class="d-flex gap-2 bg-white p-2 rounded">
+                <button type="button" class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#exampleModal">
                   <i class="bi bi-plus me-2"></i> Add
                 </button>
                 <form method="GET" action="{{ route('list') }}">
                     <div class="input-group">
                         <input type="text" name="keyword" class="form-control" placeholder="Search..." value="{{ request()->input('keyword') }}">
-                        <button class="btn btn-outline-light" type="submit">
+                        <button class="btn btn-outline-primary" type="submit">
                             <i class="bi bi-search"></i>
                         </button>
                     </div>

@@ -113,12 +113,12 @@
             </a>
           </li>
         </ul>
-        <form class="mb-4 nav-item" action="{{ route('logout') }}" method="POST">
+        <form class="mb-4 px-3 nav-item" action="{{ route('logout') }}" method="POST">
             @csrf
-            <div class="nav-link mx-3 rounded">
+            <button class="nav-link rounded w-100" type="submit">
                 <i class="bi bi-box-arrow-left"></i>
-                <button class="text-label ms-2" type="submit">Logout</button>
-            </div>
+                <span class="text-label ms-2">Logout</span>
+            </button>
         </form>
     </div>
   </nav>
