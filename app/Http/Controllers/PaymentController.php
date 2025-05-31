@@ -116,7 +116,7 @@ class PaymentController extends Controller
         // Return file as download
         return response($mpdf->Output('', 'S')) // Return as string
             ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'attachment; filename="struk-transaction-' . $id . '.pdf"');
+            ->header('Content-Disposition', 'inline; filename="struk-transaction-' . $id . '.pdf"');
     }
 
 }
