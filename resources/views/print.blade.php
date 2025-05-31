@@ -4,20 +4,8 @@
     <meta charset="UTF-8">
     <title>Struk Pembayaran</title>
     <style>
-        @media print {
-          /* sembunyikan elemen yang tidak perlu */
-          .no-print {
-            display: none !important;
-          }
-        }
-        @page {
-            size: 58mm 80mm;
-            margin: 0;
-        }
         body {
             font-family: "Courier New", monospace;
-            width: 58mm;
-            height: 80mm;
             padding: 5mm;
             margin: 0 auto;
             font-size: 12px;
@@ -61,14 +49,5 @@
     <h3>TERIMA KASIH</h3>
     <hr>
     <footer>SIMPAN STRUK INI SEBAGAI BUKTI TRANSAKSI SAH</footer>
-
-    <script>
-        window.onload = function() {
-            window.print();
-            window.onafterprint = function(){
-                window.history.back();
-            }
-        }
-    </script>
 </body>
 </html>

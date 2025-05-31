@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Payment;
+use Mpdf\Mpdf;
 
 class PaymentController extends Controller
 {
@@ -76,7 +77,22 @@ class PaymentController extends Controller
 
     public function print($id){
         $payment = Payment::findOrFail($id);
-        return view('print', compact('payment'));
-    }
+
+        $html = view('print', compact('payment'))->render();
+
+        $mpdf = new Mpdf([
+            'format' => [58, 100], // 58mm x 100mm
+            'margin_left' => 2,
+            'margin_right' => 2,
+            'margin_top' => 2,
+            'margin_bottom' => 2,
+        ]);
+        $mpdf->WriteHTML($html);
+
+        // Return file as download
+        return response($mpdf->Output('', 'S')) // Return as string
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="struk-transaction-' . $id . '.pdf"');
+        }
 
 }
