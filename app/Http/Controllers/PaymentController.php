@@ -74,4 +74,9 @@ class PaymentController extends Controller
         return redirect()->route('list');
     }
 
+    public function print($id){
+        $payment = Payment::findOrFail($id);
+        return view('print', compact('payment'));
+    }
+
 }

@@ -313,58 +313,60 @@
         }
 
         function printTransaction(paymentId) {
-            // Cari elemen yang berisi data transaksi sesuai dengan ID
-            var row = document.querySelector(`#transaction-${paymentId}`);
+            window.open('{{ route("print", ":id") }}'.replace(':id', paymentId), '_blank');
 
-            // Ambil konten HTML dari baris transaksi yang dipilih
-            var transactionContent = row.outerHTML;
+            //// Cari elemen yang berisi data transaksi sesuai dengan ID
+            //var row = document.querySelector(`#transaction-${paymentId}`);
 
-            // Membuat window baru untuk mencetak
-            var printWindow = window.open('', '', 'height=500, width=800');
-            printWindow.document.write('<html><head><title>Transaction Print</title>');
-            printWindow.document.write('<style>');
+            //// Ambil konten HTML dari baris transaksi yang dipilih
+            //var transactionContent = row.outerHTML;
 
-            // Gaya untuk struk termal
-            printWindow.document.write('@page { size: 58mm 80mm; margin: 0; }'); // Menentukan ukuran kertas
-            printWindow.document.write('body { font-family: "Courier New", monospace; width: 58mm; padding: 5mm; margin: 0; font-size: 14px; line-height: 1.5; }');
-            printWindow.document.write('table { width: 100%; border: none; padding: 0; margin: 0; font-size: 14px; }');
-            printWindow.document.write('th, td { padding: 2px; text-align: left; font-size: 10px; }');
-            printWindow.document.write('hr { border: 0; border-top: 1px dashed #000; margin-top: 5px; margin-bottom: 5px; }');
-            printWindow.document.write('h2 { font-size: 14px; text-align: center; margin-top: 0; margin-bottom: 5px; }');
-            printWindow.document.write('h3 { font-size: 12px; text-align: center; margin-top: 0; }');
-            printWindow.document.write('footer { font-size: 12px; text-align: center; margin-top: 10px; }');
-            printWindow.document.write('</style></head><body>');
+            //// Membuat window baru untuk mencetak
+            //var printWindow = window.open('', '', 'height=500, width=800');
+            //printWindow.document.write('<html><head><title>Transaction Print</title>');
+            //printWindow.document.write('<style>');
 
-            // Tambahkan Judul
-            printWindow.document.write('<h2>STRUK PEMBAYARAN</h2>');
-            printWindow.document.write('<h3>...</h3>');
-            printWindow.document.write('<hr>');
+            //// Gaya untuk struk termal
+            //printWindow.document.write('@page { size: 58mm 80mm; margin: 0; }'); // Menentukan ukuran kertas
+            //printWindow.document.write('body { font-family: "Courier New", monospace; width: 58mm; padding: 5mm; margin: 0; font-size: 14px; line-height: 1.5; }');
+            //printWindow.document.write('table { width: 100%; border: none; padding: 0; margin: 0; font-size: 14px; }');
+            //printWindow.document.write('th, td { padding: 2px; text-align: left; font-size: 10px; }');
+            //printWindow.document.write('hr { border: 0; border-top: 1px dashed #000; margin-top: 5px; margin-bottom: 5px; }');
+            //printWindow.document.write('h2 { font-size: 14px; text-align: center; margin-top: 0; margin-bottom: 5px; }');
+            //printWindow.document.write('h3 { font-size: 12px; text-align: center; margin-top: 0; }');
+            //printWindow.document.write('footer { font-size: 12px; text-align: center; margin-top: 10px; }');
+            //printWindow.document.write('</style></head><body>');
 
-            var transactionDate = row.querySelector('td:nth-child(1)').innerText;
-            var dayName = getDayName(transactionDate);
+            //// Tambahkan Judul
+            //printWindow.document.write('<h2>STRUK PEMBAYARAN</h2>');
+            //printWindow.document.write('<h3>...</h3>');
+            //printWindow.document.write('<hr>');
 
-            // Tampilkan detail transaksi
-            printWindow.document.write('<table>');
-            //printWindow.document.write('<tr><td>Tanggal</td><td>:</td><td>' + row.querySelector('td:nth-child(1)').innerText + '</td></tr>');
-            printWindow.document.write('<tr><td>' + dayName + ', ' + row.querySelector('td:nth-child(1)').innerText + '</td></tr>');
-            printWindow.document.write('<tr><td>Jenis Layanan</td><td>:</td><td>' + row.querySelector('td:nth-child(3)').innerText + '</td></tr>');
-            printWindow.document.write('<tr><td>Lokasi Konter</td><td>:</td><td>' + row.querySelector('td:nth-child(4)').innerText + '</td></tr>');
-            printWindow.document.write('<tr><td>Nama Bank</td><td>:</td><td>' + row.querySelector('td:nth-child(5)').innerText + '</td></tr>');
-            printWindow.document.write('<tr><td>Nomor Rekening</td><td>:</td><td>' + row.querySelector('td:nth-child(6)').innerText + '</td></tr>');
-            printWindow.document.write('<tr><td>Atas Nama</td><td>:</td><td>' + row.querySelector('td:nth-child(7)').innerText + '</td></tr>');
-            printWindow.document.write('<tr><td>Admin Transfer</td><td>:</td><td>' + row.querySelector('td:nth-child(9)').innerText + '</td></tr>');
-            printWindow.document.write('</table>');
-            printWindow.document.write('<hr>');
+            //var transactionDate = row.querySelector('td:nth-child(1)').innerText;
+            //var dayName = getDayName(transactionDate);
 
-            printWindow.document.write('<h3 style="margin-top: 20px;">' + row.querySelector('td:nth-child(8)').innerText + '</h3>');
-            printWindow.document.write('<h3 style="margin-top: 0px;">Terima Kasih</h3>');
+            //// Tampilkan detail transaksi
+            //printWindow.document.write('<table>');
+            ////printWindow.document.write('<tr><td>Tanggal</td><td>:</td><td>' + row.querySelector('td:nth-child(1)').innerText + '</td></tr>');
+            //printWindow.document.write('<tr><td>' + dayName + ', ' + row.querySelector('td:nth-child(1)').innerText + '</td></tr>');
+            //printWindow.document.write('<tr><td>Jenis Layanan</td><td>:</td><td>' + row.querySelector('td:nth-child(3)').innerText + '</td></tr>');
+            //printWindow.document.write('<tr><td>Lokasi Konter</td><td>:</td><td>' + row.querySelector('td:nth-child(4)').innerText + '</td></tr>');
+            //printWindow.document.write('<tr><td>Nama Bank</td><td>:</td><td>' + row.querySelector('td:nth-child(5)').innerText + '</td></tr>');
+            //printWindow.document.write('<tr><td>Nomor Rekening</td><td>:</td><td>' + row.querySelector('td:nth-child(6)').innerText + '</td></tr>');
+            //printWindow.document.write('<tr><td>Atas Nama</td><td>:</td><td>' + row.querySelector('td:nth-child(7)').innerText + '</td></tr>');
+            //printWindow.document.write('<tr><td>Admin Transfer</td><td>:</td><td>' + row.querySelector('td:nth-child(9)').innerText + '</td></tr>');
+            //printWindow.document.write('</table>');
+            //printWindow.document.write('<hr>');
 
-            printWindow.document.write('<hr>');
-            printWindow.document.write('<footer>SIMPAN TANDA TERIMA INI SEBAGAI TRANSAKSI YANG SAH</footer>');
+            //printWindow.document.write('<h3 style="margin-top: 20px;">' + row.querySelector('td:nth-child(8)').innerText + '</h3>');
+            //printWindow.document.write('<h3 style="margin-top: 0px;">Terima Kasih</h3>');
 
-            printWindow.document.write('<script>window.print(); window.close();</' + 'script>');
-            printWindow.document.write('</body></html>');
-            printWindow.document.close();
+            //printWindow.document.write('<hr>');
+            //printWindow.document.write('<footer>SIMPAN TANDA TERIMA INI SEBAGAI TRANSAKSI YANG SAH</footer>');
+
+            //printWindow.document.write('<script>window.print(); window.close();</' + 'script>');
+            //printWindow.document.write('</body></html>');
+            //printWindow.document.close();
           }
     </script>
 

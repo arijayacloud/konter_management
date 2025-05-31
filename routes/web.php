@@ -22,6 +22,7 @@ Route::middleware([AuthCustom::class])->group(function(){
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
     Route::get('/list', [AuthController::class, 'list'])->name('list');
+    Route::get('/payments/print/{id}', [PaymentController::class, 'print'])->name('print');
     Route::post('/payments', [PaymentController::class, 'create'])->name('create');  // Menyimpan data pembayaran
     Route::delete('/payments/{id}', [PaymentController::class, 'destroy'])->name('destroy');
     Route::put('/payments', [PaymentController::class, 'update'])->name('update');
