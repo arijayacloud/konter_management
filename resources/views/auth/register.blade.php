@@ -23,8 +23,13 @@
                     <form method="POST" action="{{ route('register') }}" class="mt-5">
                       @csrf
                       <div class="mb-3">
-                        <label for="name" class="form-label fs-6 fs-sm-6 fs-md-5">Name</label>
-                        <input type="text" name="name" class="form-control" id="name" placeholder="John Doe" required>
+                        <label for="name" class="form-label fs-6 fs-sm-6 fs-md-5">Nama Konter</label>
+                        <input type="text" name="nama_konter" class="form-control" id="name" placeholder="Enter Konter Name" required>
+                      </div>
+
+                      <div class="mb-3">
+                        <label for="lokasi" class="form-label fs-6 fs-sm-6 fs-md-5">Alamat</label>
+                        <input type="text" name="lokasi" class="form-control" id="lokasi" placeholder="Enter Location" required>
                       </div>
 
                       <div class="mb-3">
@@ -36,6 +41,7 @@
                         <label for="password" class="form-label fs-6 fs-sm-6 fs-md-5">Password</label>
                         <input type="password" name="password" class="form-control" id="password" placeholder="Enter password" required>
                       </div>
+
 
                       <button type="submit" class="btn btn-primary w-100 fs-6 fs-sm-5">Register</button>
                     </form>

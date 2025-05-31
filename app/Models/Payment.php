@@ -17,11 +17,17 @@ class Payment extends Model
     protected $fillable = [
         'tanggal',
         'jenis_layanan',
-        'lokasi_konter',
         'nama_bank',
         'nomor_rekening',
         'atas_nama',
         'jumlah_transfer',
         'admin_transfer',
+        'user_id',
+        'serial_number',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

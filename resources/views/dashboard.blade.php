@@ -27,10 +27,6 @@
                     <input type="text" name="jenis_layanan" class="form-control" id="jenisLayanan" required>
                   </div>
                 </div>
-                <div class="mb-3">
-                    <label for="lokasiKonter" class="form-label">Lokasi Konter</label>
-                    <input type="text" name="lokasi_konter" class="form-control" id="lokasiKonter" required>
-                </div>
                 <div class="flex justify-content-between gap-3">
                   <div class="mb-3">
                     <label for="namaBank" class="form-label">Nama Bank</label>

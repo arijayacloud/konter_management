@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Payment;
+use App\Models\User;
 use Mpdf\Mpdf;
 
 class PaymentController extends Controller
@@ -16,7 +17,6 @@ class PaymentController extends Controller
         $request->validate([
             'tanggal' => 'required|date',
             'jenis_layanan' => 'required|string',
-            'lokasi_konter' => 'required|string',
             'nama_bank' => 'required|string',
             'nomor_rekening' => 'required|string',
             'atas_nama' => 'required|string',
@@ -24,8 +24,27 @@ class PaymentController extends Controller
             'admin_transfer' => 'required|string',
         ]);
 
+        $user = User::find(session('user_id'));
+
+        $serial = $request->serial_number;
+        if (!$serial) {
+            do {
+                $serial = str_pad(random_int(0, 99999999), 8, '0', STR_PAD_LEFT);
+            } while (Payment::where('serial_number', $serial)->exists());
+        }
+
         // Simpan data ke database
-        Payment::create($request->all());
+        $payment = Payment::create([
+            'tanggal' => $request->tanggal,
+            'jenis_layanan' => $request->jenis_layanan,
+            'nama_bank' => $request->nama_bank,
+            'nomor_rekening' => $request->nomor_rekening,
+            'atas_nama' => $request->atas_nama,
+            'jumlah_transfer' => $request->jumlah_transfer,
+            'admin_transfer' => $request->admin_transfer,
+            'user_id' => $user->id,
+            'serial_number' => $serial,
+        ]);
 
         return redirect()->route('list');  // Setelah disimpan, redirect ke halaman daftar pembayaran
     }
@@ -36,7 +55,6 @@ class PaymentController extends Controller
             'id' => 'required|exists:payments,id',
             'tanggal' => 'required|date',
             'jenis_layanan' => 'required|string',
-            'lokasi_konter' => 'required|string',
             'nama_bank' => 'required|string',
             'nomor_rekening' => 'required|string',
             'atas_nama' => 'required|string',
@@ -49,7 +67,6 @@ class PaymentController extends Controller
         $payment->update([
             'tanggal' => $validatedData['tanggal'],
             'jenis_layanan' => $validatedData['jenis_layanan'],
-            'lokasi_konter' => $validatedData['lokasi_konter'],
             'nama_bank' => $validatedData['nama_bank'],
             'nomor_rekening' => $validatedData['nomor_rekening'],
             'atas_nama' => $validatedData['atas_nama'],
@@ -78,7 +95,11 @@ class PaymentController extends Controller
     public function print($id){
         $payment = Payment::findOrFail($id);
 
-        $html = view('print', compact('payment'))->render();
+        $user = User::find(session('user_id'));
+        $nama_konter = $user->nama_konter;
+        $lokasi = $user->lokasi;
+
+        $html = view('print', compact('payment', 'nama_konter', 'lokasi'))->render();
 
         $mpdf = new Mpdf([
             'format' => [58, 100], // 58mm x 100mm
@@ -89,10 +110,13 @@ class PaymentController extends Controller
         ]);
         $mpdf->WriteHTML($html);
 
+        // return response($mpdf->Output('', 'I')) // 'I' = inline preview
+        // ->header('Content-Type', 'application/pdf');
+
         // Return file as download
         return response($mpdf->Output('', 'S')) // Return as string
             ->header('Content-Type', 'application/pdf')
             ->header('Content-Disposition', 'attachment; filename="struk-transaction-' . $id . '.pdf"');
-        }
+    }
 
 }

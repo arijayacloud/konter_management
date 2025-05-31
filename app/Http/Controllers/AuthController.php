@@ -19,12 +19,13 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $result = $request->validate([
-            'name' => 'required|string|max:255',
+            'nama_konter' => 'required|string|max:255',
+            'lokasi' => 'required|string|unique:users,lokasi|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6',
         ]);
 
-        $data = [ 'name' => $request->name, 'email' => $request->email, 'password' => $request->password ];
+        $data = [ 'nama_konter' => $request->nama_konter, 'lokasi' => $request->lokasi, 'email' => $request->email, 'password' => Hash::make($request->password) ];
         try {
             $user = User::create($data);
             return redirect()->route('login');
@@ -32,10 +33,6 @@ class AuthController extends Controller
             Log::error('Error creating user: ' . $e->getMessage());
             return back()->withErrors(['error' => 'There was an issue creating your account. Please try again.']);
         }
-
-        // // Simpan user id ke session
-        // $request->session()->put('user_id', $user->id);
-        // $request->session()->put('user_name', $user->name);
     }
 
     // Tampilkan form login
@@ -60,7 +57,7 @@ class AuthController extends Controller
 
         // Simpan user id ke session
         $request->session()->put('user_id', $user->id);
-        $request->session()->put('user_name', $user->name);
+        // $request->session()->put('user_name', $user->name);
 
         return redirect()->route('dashboard');
     }
@@ -88,29 +85,36 @@ class AuthController extends Controller
 
         $keyword = strtolower($keyword);
 
+        $userId = session('user_id');
         // Jika ada query pencarian, cari di database
         if ($keyword) {
             // Misalnya kita mencari berdasarkan 'jenis_layanan', 'lokasi_konter', atau 'atas_nama'
-                $payments = Payment::whereRaw('LOWER(jenis_layanan) LIKE ?', ["%{$keyword}%"])
-                    ->orWhereRaw('LOWER(lokasi_konter) LIKE ?', ["%{$keyword}%"])
-                    ->orWhereRaw('LOWER(nama_bank) LIKE ?', ["%{$keyword}%"])
-                    ->orWhereRaw('LOWER(nomor_rekening) LIKE ?', ["%{$keyword}%"])
-                    ->orWhereRaw('LOWER(atas_nama) LIKE ?', ["%{$keyword}%"])
-                    ->orWhereRaw('LOWER(jumlah_transfer) LIKE ?', ["%{$keyword}%"])
-                    ->orWhereRaw('LOWER(admin_transfer) LIKE ?', ["%{$keyword}%"])
-                    ->paginate(10); // Pagination 10 results per page
+            $payments = Payment::where('user_id', $userId)
+                ->where(function ($query) use ($keyword) {
+                    $keyword = strtolower($keyword); // konversi ke lowercase sekali aja
+
+                    $query->whereRaw('LOWER(jenis_layanan) LIKE ?', ["%{$keyword}%"])
+                          ->orWhereRaw('LOWER(nama_bank) LIKE ?', ["%{$keyword}%"])
+                          ->orWhereRaw('LOWER(nomor_rekening) LIKE ?', ["%{$keyword}%"])
+                          ->orWhereRaw('LOWER(atas_nama) LIKE ?', ["%{$keyword}%"])
+                          ->orWhereRaw('LOWER(jumlah_transfer) LIKE ?', ["%{$keyword}%"])
+                          ->orWhereRaw('LOWER(admin_transfer) LIKE ?', ["%{$keyword}%"]);
+                })
+                ->paginate(10);
         } else {
             // Jika tidak ada pencarian, ambil semua data
-            $payments = Payment::paginate(10);
+            $payments = Payment::where('user_id', $userId)->paginate(10);
         }
         // $payments = Payment::all();  // Ambil semua data pembayaran dari database
         // $payments = Payment::paginate(1);
 
-        $userName = $request->session()->get('user_name');
-        $paymentsCount = Payment::count();
+        $user = User::find($userId);
+
+        $nama_konter = $user->nama_konter;
+        $paymentsCount = Payment::where('user_id', $userId)->count();
 
         $totalPayment = 0;
-        foreach (Payment::all() as $payment) {
+        foreach ($payments as $payment) {
             // Ambil nilai jumlah_transfer yang disimpan sebagai string (misalnya "Rp 1.000.000")
             $paymentString = $payment->jumlah_transfer;
 
@@ -124,8 +128,11 @@ class AuthController extends Controller
             $totalPayment += $payment;
         }
 
-        $uniqueNamesCount = Payment::distinct('atas_nama')->count('atas_nama');
+        $uniqueNamesCount = Payment::where('user_id', $userId)
+            ->distinct('atas_nama')
+            ->count('atas_nama');
 
-        return view('list', compact('userName', 'payments', 'paymentsCount', 'totalPayment', 'uniqueNamesCount'));
+
+        return view('list', compact('nama_konter', 'payments', 'paymentsCount', 'totalPayment', 'uniqueNamesCount'));
     }
 }
