@@ -1,19 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-Route::get('/', function () { return view('welcome'); });
-// Route::view('/login', 'auth.login');
-// Route::view('/register', 'auth.register');
-
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->name('dashboard');
-//
-// Route::get('/list', function () {
-//     return view('list');
-// })->name('list');
-
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\{AuthCustom, RedirectIfAuthenticatedCustom};
 use App\Http\Controllers\PaymentController;
@@ -26,6 +13,7 @@ Route::middleware([AuthCustom::class])->group(function(){
     Route::post('/payments', [PaymentController::class, 'create'])->name('create');  // Menyimpan data pembayaran
     Route::delete('/payments/{id}', [PaymentController::class, 'destroy'])->name('destroy');
     Route::put('/payments', [PaymentController::class, 'update'])->name('update');
+    Route::get('/', function () { return view('auth.login'); });
 });
 
 Route::middleware([RedirectIfAuthenticatedCustom::class])->group(function(){

@@ -13,7 +13,7 @@
             <div class="d-none col d-md-flex align-items-center justify-content-center">
                 <img class="img-fluid" src="{{ asset('images/register.jpg')}}" alt="register">
             </div>
-            <div class="col d-flex align-items-center justify-content-center bg-white">
+            <div class="col d-flex align-items-center h-100 justify-content-center bg-white">
                 <div class="w-75 p-lg-5 h-auto">
                     <div class="text-center mb-4">
                       <h1 class="fw-bold fs-4 fs-sm-3 fs-md-2">Create Your Account</h1>
