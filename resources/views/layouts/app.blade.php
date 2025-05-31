@@ -58,11 +58,12 @@
       #formWrapper {
           margin-top: 0px;
       }
+
+        #addButton {
+            display: flex;
+        }
     }
 
-    #addButton {
-        display: flex;
-    }
 
     /* Mobile styling */
     @media (max-width: 767.98px) {
@@ -73,6 +74,9 @@
       #formWrapper {
           margin-top: 20px;
       }
+        #addButton {
+            display: none;
+        }
 
       .navbar-toggle {
         display: block;
@@ -101,7 +105,7 @@
       nav.mobile-navbar {
         display: flex;
         flex-direction: column;
-        background-color: #0d6efd;
+        background-color: #3d8bfd;
         gap: 10px;
         color: white;
         position: fixed;
@@ -118,7 +122,7 @@
 
       nav.mobile-navbar.active {
         padding-top: 3.8rem;
-        height: 275px;
+        height: 345px;
       }
 
       main.content {
@@ -197,6 +201,9 @@
     <a href="{{ route('list') }}" class="nav-link rounded {{ request()->routeIs('list') ? 'active' : '' }}">
       <i class="bi bi-list-ul"></i> <span class="ms-2">List</span>
     </a>
+    <button onclick="toggleNavbar()" type="button" class="nav-link rounded" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      <i class="bi bi-plus me-2"></i> Add
+    </button>
     <form action="{{ route('logout') }}" method="POST" class="w-100">
       @csrf
       <button type="submit" class="nav-link w-100 text-start rounded">

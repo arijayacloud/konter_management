@@ -96,6 +96,7 @@
                 <thead class="">
                   <tr class="">
                     <th class="text-muted">Tanggal</th>
+                    <th class="text-muted text-center">Aksi</th>
                     <th class="text-muted">Jenis Layanan</th>
                     <th class="text-muted">Lokasi Konter</th>
                     <th class="text-muted">Nama Bank</th>
@@ -103,20 +104,12 @@
                     <th class="text-muted">Atas Nama</th>
                     <th class="text-muted">Jumlah Transfer</th>
                     <th class="text-muted">Admin Transfer</th>
-                    <th class="text-muted text-center">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
                 @foreach ($payments as $payment)
                   <tr id="transaction-{{ $payment->id }}">
                     <td>{{ $payment->tanggal }}</td>
-                    <td>{{ $payment->jenis_layanan }}</td>
-                    <td>{{ $payment->lokasi_konter }}</td>
-                    <td>{{ $payment->nama_bank }}</td>
-                    <td>{{ $payment->nomor_rekening }}</td>
-                    <td>{{ $payment->atas_nama }}</td>
-                    <td>Rp {{ number_format($payment->jumlah_transfer, 0, ',', '.') }}</td>
-                    <td>Rp {{ number_format($payment->admin_transfer, 0, ',', '.') }}</td>
                     <td class="text-center">
                       <div class="btn-group" role="group">
                         <button class="btn btn-sm btn-outline-primary" title="Edit" data-bs-toggle="modal" data-bs-target="#editModal" data-id="{{ $payment->id }}"
@@ -142,6 +135,13 @@
                         </button>
                       </div>
                     </td>
+                    <td>{{ $payment->jenis_layanan }}</td>
+                    <td>{{ $payment->lokasi_konter }}</td>
+                    <td>{{ $payment->nama_bank }}</td>
+                    <td>{{ $payment->nomor_rekening }}</td>
+                    <td>{{ $payment->atas_nama }}</td>
+                    <td>Rp {{ number_format($payment->jumlah_transfer, 0, ',', '.') }}</td>
+                    <td>Rp {{ number_format($payment->admin_transfer, 0, ',', '.') }}</td>
                   </tr>
                   @endforeach
                 </tbody>
@@ -337,7 +337,7 @@
 
             // Tambahkan Judul
             printWindow.document.write('<h2>STRUK PEMBAYARAN</h2>');
-            printWindow.document.write('<h3>AE CELL</h3>');
+            printWindow.document.write('<h3>...</h3>');
             printWindow.document.write('<hr>');
 
             var transactionDate = row.querySelector('td:nth-child(1)').innerText;
@@ -347,16 +347,16 @@
             printWindow.document.write('<table>');
             //printWindow.document.write('<tr><td>Tanggal</td><td>:</td><td>' + row.querySelector('td:nth-child(1)').innerText + '</td></tr>');
             printWindow.document.write('<tr><td>' + dayName + ', ' + row.querySelector('td:nth-child(1)').innerText + '</td></tr>');
-            printWindow.document.write('<tr><td>Jenis Layanan</td><td>:</td><td>' + row.querySelector('td:nth-child(2)').innerText + '</td></tr>');
-            printWindow.document.write('<tr><td>Lokasi Konter</td><td>:</td><td>' + row.querySelector('td:nth-child(3)').innerText + '</td></tr>');
-            printWindow.document.write('<tr><td>Nama Bank</td><td>:</td><td>' + row.querySelector('td:nth-child(4)').innerText + '</td></tr>');
-            printWindow.document.write('<tr><td>Nomor Rekening</td><td>:</td><td>' + row.querySelector('td:nth-child(5)').innerText + '</td></tr>');
-            printWindow.document.write('<tr><td>Atas Nama</td><td>:</td><td>' + row.querySelector('td:nth-child(6)').innerText + '</td></tr>');
-            printWindow.document.write('<tr><td>Admin Transfer</td><td>:</td><td>' + row.querySelector('td:nth-child(8)').innerText + '</td></tr>');
+            printWindow.document.write('<tr><td>Jenis Layanan</td><td>:</td><td>' + row.querySelector('td:nth-child(3)').innerText + '</td></tr>');
+            printWindow.document.write('<tr><td>Lokasi Konter</td><td>:</td><td>' + row.querySelector('td:nth-child(4)').innerText + '</td></tr>');
+            printWindow.document.write('<tr><td>Nama Bank</td><td>:</td><td>' + row.querySelector('td:nth-child(5)').innerText + '</td></tr>');
+            printWindow.document.write('<tr><td>Nomor Rekening</td><td>:</td><td>' + row.querySelector('td:nth-child(6)').innerText + '</td></tr>');
+            printWindow.document.write('<tr><td>Atas Nama</td><td>:</td><td>' + row.querySelector('td:nth-child(7)').innerText + '</td></tr>');
+            printWindow.document.write('<tr><td>Admin Transfer</td><td>:</td><td>' + row.querySelector('td:nth-child(9)').innerText + '</td></tr>');
             printWindow.document.write('</table>');
             printWindow.document.write('<hr>');
 
-            printWindow.document.write('<h3 style="margin-top: 20px;">' + row.querySelector('td:nth-child(7)').innerText + '</h3>');
+            printWindow.document.write('<h3 style="margin-top: 20px;">' + row.querySelector('td:nth-child(8)').innerText + '</h3>');
             printWindow.document.write('<h3 style="margin-top: 0px;">Terima Kasih</h3>');
 
             printWindow.document.write('<hr>');
