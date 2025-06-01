@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Payment;
 use App\Models\User;
 use Mpdf\Mpdf;
+use App\Exports\MutasiExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PaymentController extends Controller
 {
@@ -148,5 +150,24 @@ class PaymentController extends Controller
         } else {
             abort(400, 'Filter type tidak valid');
         }
+
+        $mutasi = $mutasi->map(function($item) use ($user) {
+            return [
+                'tanggal' => $item->tanggal,
+                'jenis_layanan' => $item->jenis_layanan,
+                'lokasi_konter' => $user->nama_konter,   // kolom tambahan dari user
+                'nama_bank' => $item->nama_bank,
+                'atas_nama' => $item->atas_nama,
+                'jumlah_transfer' => $item->jumlah_transfer,
+                'admin_transfer' => $item->admin_transfer,
+            ];
+        });
+
+        if ($mutasi->isEmpty()) {
+        // Kalau datanya kosong, redirect balik dengan pesan error
+            return redirect()->route("list")->with('error', 'Data mutasi tidak ditemukan untuk filter yang dipilih.');
+        }
+
+        return Excel::download(new MutasiExport($mutasi), 'mutasi.xlsx');
     }
 }

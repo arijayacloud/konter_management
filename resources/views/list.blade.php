@@ -70,6 +70,11 @@
                 </form>
               </div>
             </div>
+            @if(session('error'))
+                <div class="alert alert-danger mt-4 mx-2" role="alert">
+                    {{ session('error') }}
+                </div>
+            @endif
 
             <hr />
 
