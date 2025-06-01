@@ -233,7 +233,7 @@
             <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Modal</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <form method="POST" action="{{ route('update') }}">
+          <form method="POST" action="{{ route('update') }}" autocomplete="off">
             @csrf
             @method('PUT')
             <div class="modal-body">
