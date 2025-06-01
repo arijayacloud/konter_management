@@ -36,10 +36,10 @@ class PaymentController extends Controller
         // Simpan data ke database
         $payment = Payment::create([
             'tanggal' => $request->tanggal,
-            'jenis_layanan' => $request->jenis_layanan,
-            'nama_bank' => $request->nama_bank,
-            'nomor_rekening' => $request->nomor_rekening,
-            'atas_nama' => $request->atas_nama,
+            'jenis_layanan' => strtoupper($request->jenis_layanan),
+            'nama_bank' => strtoupper($request->nama_bank),
+            'nomor_rekening' => $request->nomor_rekening, // ini gak perlu dikapitalin
+            'atas_nama' => strtoupper($request->atas_nama),
             'jumlah_transfer' => $request->jumlah_transfer,
             'admin_transfer' => $request->admin_transfer,
             'user_id' => $user->id,
@@ -66,10 +66,10 @@ class PaymentController extends Controller
 
         $payment->update([
             'tanggal' => $validatedData['tanggal'],
-            'jenis_layanan' => $validatedData['jenis_layanan'],
-            'nama_bank' => $validatedData['nama_bank'],
+            'jenis_layanan' => strtoupper($validatedData['jenis_layanan']),
+            'nama_bank' => strtoupper($validatedData['nama_bank']),
             'nomor_rekening' => $validatedData['nomor_rekening'],
-            'atas_nama' => $validatedData['atas_nama'],
+            'atas_nama' => strtoupper($validatedData['atas_nama']),
             'jumlah_transfer' => $validatedData['jumlah_transfer'],
             'admin_transfer' => $validatedData['admin_transfer'],
         ]);
@@ -110,13 +110,43 @@ class PaymentController extends Controller
         ]);
         $mpdf->WriteHTML($html);
 
-        // return response($mpdf->Output('', 'I')) // 'I' = inline preview
-        // ->header('Content-Type', 'application/pdf');
+        return response($mpdf->Output('', 'I')) // 'I' = inline preview
+        ->header('Content-Type', 'application/pdf');
 
         // Return file as download
-        return response($mpdf->Output('', 'S')) // Return as string
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'inline; filename="struk-transaction-' . $id . '.pdf"');
+        // return response($mpdf->Output('', 'S')) // Return as string
+        //     ->header('Content-Type', 'application/pdf')
+        //     ->header('Content-Disposition', 'inline; filename="struk-transaction-' . $id . '.pdf"');
     }
 
+    public function downloadMutasi(Request $request){
+
+        $user = User::find(session('user_id'));
+        $filterType = $request->input('filter_type');
+
+        if ($filterType === 'harian') {
+            $request->validate([
+                'tanggal' => 'required|date',
+            ]);
+            $tanggal = $request->input('tanggal');
+
+            $mutasi = Payment::where('user_id', $user->id)
+                ->whereDate('tanggal', $tanggal)
+                ->get();
+        } elseif ($filterType === 'bulanan') {
+            $request->validate([
+                'bulan' => 'required|integer|min:1|max:12',
+                'tahun' => 'required|integer|min:2000',
+            ]);
+            $bulan = $request->input('bulan');
+            $tahun = $request->input('tahun');
+
+            $mutasi = Payment::where('user_id', $user->id)
+                ->whereYear('tanggal', $tahun)
+                ->whereMonth('tanggal', $bulan)
+                ->get();
+        } else {
+            abort(400, 'Filter type tidak valid');
+        }
+    }
 }

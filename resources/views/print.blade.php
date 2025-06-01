@@ -59,8 +59,8 @@
 
     <table>
         <tr >
-            <td class="center" colspan="2" style="padding: 5px 0px;" >
-                {{ \Carbon\Carbon::now()->translatedFormat('l, d M Y') }}
+            <td class="center" colspan="2" style="padding: 5px 0px;">
+                {{ strtoupper(\Carbon\Carbon::now()->translatedFormat('l, d M Y')) }}
                 {{ \Carbon\Carbon::now()->format('H:i') }}
             </td>
         </tr>

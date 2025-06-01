@@ -133,6 +133,12 @@ class AuthController extends Controller
             ->count('atas_nama');
 
 
-        return view('list', compact('nama_konter', 'payments', 'paymentsCount', 'totalPayment', 'uniqueNamesCount'));
+        $bulanTahun = Payment::where('user_id', $userId)
+            ->selectRaw("DISTINCT EXTRACT(YEAR FROM tanggal) AS tahun, EXTRACT(MONTH FROM tanggal) AS bulan")
+            ->orderByDesc('tahun')
+            ->orderByDesc('bulan')
+            ->get();
+
+        return view('list', compact('nama_konter', 'payments', 'paymentsCount', 'totalPayment', 'uniqueNamesCount', 'bulanTahun'));
     }
 }
