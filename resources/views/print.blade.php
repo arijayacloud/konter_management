@@ -13,7 +13,7 @@
         }
 
         .wrapper {
-            padding: 15px;
+            padding: 15px 10px;
         }
 
         table {
@@ -50,8 +50,8 @@
 <body >
 
 <div class="wrapper">
-    <div style="margin: 10px 0px;">
-        <h2 style="margin-bottom: 10px; ">{{ $nama_konter }}</h2>
+    <div style="margin: 5px 0px;">
+        <h2 style="margin-bottom: 5px; ">{{ $nama_konter }}</h2>
         <p>{{ $lokasi }}</p>
     </div>
 
@@ -59,9 +59,9 @@
 
     <table>
         <tr >
-            <td class="center" colspan="2" style="padding: 10px 0px;" >
-                {{ \Carbon\Carbon::parse($payment->tanggal)->translatedFormat('l, d M Y') }}
-                {{ \Carbon\Carbon::parse($payment->created_at)->format('H:i') }}
+            <td class="center" colspan="2" style="padding: 5px 0px;" >
+                {{ \Carbon\Carbon::now()->translatedFormat('l, d M Y') }}
+                {{ \Carbon\Carbon::now()->format('H:i') }}
             </td>
         </tr>
         <tr><td>Serial Number</td><td>: {{ $payment->serial_number }}</td></tr>
@@ -70,12 +70,13 @@
         <tr><td>No Rek</td><td>: {{ $payment->nomor_rekening }}</td></tr>
         <tr><td>Atas Nama</td><td>: {{ $payment->atas_nama }}</td></tr>
         <tr><td>Admin</td><td>: Rp {{ number_format($payment->admin_transfer, 0, ',', '.') }}</td></tr>
+        <tr><td>STATUS</td><td>: SUKSES</td></tr>
     </table>
 
     <hr>
 
-    <h2 style="margin-top: 20px;" class="total">Rp {{ number_format($payment->jumlah_transfer, 0, ',', '.') }}</h2>
-    <p class="center" style="margin-top: 20px;">TERIMA KASIH</p>
+    <h2 style="margin-top: 10px;" class="total">Rp {{ number_format($payment->jumlah_transfer, 0, ',', '.') }}</h2>
+    <p class="center" style="margin-top: 10px;">TERIMA KASIH</p>
     <hr>
     <p class="center">SIMPAN STRUK INI SEBAGAI BUKTI TRANSAKSI SAH</p>
 </div>

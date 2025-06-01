@@ -163,7 +163,7 @@
             <h1 class="modal-title fs-5" id="exampleModalLabel">Add Modal</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-        <form method="POST" action="{{ route('create') }}">
+        <form method="POST" action="{{ route('create') }}" autocomplete="off">
             @csrf
           <div class="modal-body">
                 <div class="flex justify-content-between gap-3">
@@ -172,15 +172,30 @@
                     <input type="date" name="tanggal" class="form-control" id="tanggal" required>
                   </div>
                   <div class="mb-3">
-                    <label for="jenisLayanan" class="form-label">Jenis Layanan</label>
-                    <input type="text" name="jenis_layanan" class="form-control" id="jenisLayanan" required>
+                      <label for="jenisLayanan" class="form-label">Jenis Layanan</label>
+                      <select name="jenis_layanan" class="form-select" id="jenisLayanan" required>
+                        <option value="" selected disabled>Pilih jenis layanan</option>
+                        <option value="TRANSFER">TRANSFER</option>
+                        <option value="TARIK TUNAI">TARIK TUNAI</option>
+                        <option value="EWALET">EWALET</option>
+                        <option value="TRANSFER KARTU">TRANSFER KARTU</option>
+                      </select>
                   </div>
                 </div>
                 <div class="flex justify-content-between gap-3">
-                  <div class="mb-3">
-                    <label for="namaBank" class="form-label">Nama Bank</label>
-                    <input type="text" name="nama_bank" class="form-control" id="namaBank" required>
-                  </div>
+                    <div class="mb-3">
+                        <label for="namaBank">Nama Bank</label>
+                        <input list="bankList" id="namaBank" name="nama_bank" class="form-control" placeholder="Pilih atau ketik nama bank" required>
+                        <datalist id="bankList">
+                          <option value="BRI">
+                          <option value="BCA">
+                          <option value="BNI">
+                          <option value="MANDIRI">
+                          <option value="DANA">
+                          <option value="OVO">
+                          <option value="GOJEK">
+                        </datalist>
+                    </div>
                   <div class="mb-3">
                     <label for="nomorRekening" class="form-label">Nomor Rekening</label>
                     <input type="number" name="nomor_rekening" class="form-control" id="nomorRekening" required>
@@ -230,15 +245,30 @@
                   <label for="editTanggal" class="form-label">Tanggal</label>
                   <input type="date" name="tanggal" class="form-control" id="editTanggal" required>
                 </div>
-                <div class="mb-3">
-                  <label for="editJenisLayanan" class="form-label">Jenis Layanan</label>
-                  <input type="text" name="jenis_layanan" class="form-control" id="editJenisLayanan" required>
-                </div>
+                  <div class="mb-3">
+                      <label for="jenisLayanan" class="form-label">Jenis Layanan</label>
+                      <select name="jenis_layanan" class="form-select" id="editJenisLayanan" required>
+                        <option value="" selected disabled>Pilih jenis layanan</option>
+                        <option value="TRANSFER">TRANSFER</option>
+                        <option value="TARIK TUNAI">TARIK TUNAI</option>
+                        <option value="EWALET">EWALET</option>
+                        <option value="TRANSFER KARTU">TRANSFER KARTU</option>
+                      </select>
+                  </div>
               </div>
               <div class="flex justify-content-between gap-3">
                 <div class="mb-3">
-                  <label for="editNamaBank" class="form-label">Nama Bank</label>
-                  <input type="text" name="nama_bank" class="form-control" id="editNamaBank" required>
+                    <label for="namaBank">Nama Bank</label>
+                    <input list="bankList" id="editNamaBank" name="nama_bank" class="form-control" placeholder="Pilih atau ketik nama bank" required>
+                    <datalist id="bankList">
+                      <option value="BRI">
+                      <option value="BCA">
+                      <option value="BNI">
+                      <option value="MANDIRI">
+                      <option value="DANA">
+                      <option value="OVO">
+                      <option value="GOJEK">
+                    </datalist>
                 </div>
                 <div class="mb-3">
                   <label for="editNomorRekening" class="form-label">Nomor Rekening</label>
