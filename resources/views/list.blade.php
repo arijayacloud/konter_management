@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-    <main class="container-fluid h-[100dvh] flex flex-column" >
+    <main class="container-fluid flex flex-column" >
         <div id="rowInfo" class="gap-4 mb-4">
             <div class="col">
-                <div class="card justify-content-between shadow-md h-100 border-0">
+                <div class="border-start border-primary border-5 card justify-content-between shadow-md h-100 border-0">
                   <div class="m-3 mb-0">
                     <div class="d-flex align-items-center mb-3">
                       <div class="bg-primary-subtle text-primary rounded px-3 py-2 me-3">
@@ -24,7 +24,7 @@
               </div>
 
             <div class="col">
-                <div class="card shadow-md h-100 border-0 justify-content-between">
+                <div class="border-start border-primary border-5 card shadow-md h-100 border-0 justify-content-between">
                   <div class="m-3 mb-0">
                     <div class="d-flex align-items-center mb-3">
                       <div class="bg-danger-subtle text-danger rounded px-3 py-2 me-3">
@@ -48,19 +48,16 @@
           <div class="d-flex flex-column h-100">
 
             <!-- Header -->
-            <div class="text-white d-flex flex-wrap justify-content-between align-items-center bg-primary p-3">
-              <div>
+            <div class="row text-white bg-primary align-items-center py-3 px-4">
+              <div class="col-12 col-sm-6">
                 <h4 class="mb-1">Transaction</h4>
                 <p class="mb-0">Latest transactions sales in time</p>
               </div>
-              <div id="formWrapper" class="d-flex gap-2 bg-white p-2 rounded">
+              <div id="formWrapper" class="col-12 col-sm-6 d-flex gap-2 bg-white rounded p-1">
                 <button type="button" id="addButton" class="btn btn-primary align-items-center" data-bs-toggle="modal" data-bs-target="#exampleModal">
                   <i class="bi bi-plus me-2"></i> Add
                 </button>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#download">
-                  Download
-                </button>
-                <form method="GET" action="{{ route('list') }}">
+                <form method="GET" action="{{ route('list') }}" class="grow-1" autocomplete="off">
                     <div class="input-group">
                         <input type="text" name="keyword" class="form-control" placeholder="Search..." value="{{ request()->input('keyword') }}">
                         <button class="btn btn-outline-primary" type="submit">
@@ -70,11 +67,44 @@
                 </form>
               </div>
             </div>
+
             @if(session('error'))
                 <div class="alert alert-danger mt-4 mx-2" role="alert">
                     {{ session('error') }}
                 </div>
             @endif
+
+            <form class="d-flex justify-content-center gap-2 mt-4 px-3" onchange="filter();">
+                        <div class="">
+                            <select class="form-select" id="filter_type" aria-label="Default select example" onchange="toggleDateFields();">
+                              <option selected disabled>Filter</option>
+                              <option value="semua">Semua</option>
+                              <option value="harian">Harian</option>
+                              <option value="bulanan">Bulanan</option>
+                            </select>
+                        </div>
+                        <div id="harian-fields" class="form-group " style="display: none;">
+                            <input type="date" name="tanggal" id="tanggal" class="form-control">
+                        </div>
+                        <div id="bulanan-fields" class="form-group" style="display: none;">
+                            <select name="bulan" id="bulan" class="form-control" required>
+                                <option selected disabled>
+                                    Bulan
+                                </option>
+                                @foreach ($bulanTahun as $item)
+                                    @php
+                                        $bulan = (int) $item->bulan;
+                                    @endphp
+                                    <option value="{{ $bulan }}">
+                                        {{ \Carbon\Carbon::create()->month($bulan)->translatedFormat('F') }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="grow d-flex justify-content-end">
+                            <a href="{{ route('export', request()->all()) }}" class="btn btn-primary" >Export</a>
+                        </div>
+            </form>
 
             <hr />
 
@@ -287,59 +317,6 @@
       </div>
     </div>
 
-
-<!-- Modal Download -->
-<div class="modal fade" id="download" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <form action="{{ route('download') }}" method="POST" class="modal-content" autocomplete="off">
-    @csrf
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Download Mutasi</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group mb-3">
-            <label for="filter_type">Tipe:</label>
-            <select name="filter_type" id="filter_type" class="form-control" onchange="toggleDateFields()" required>
-                <option value="harian">Harian</option>
-                <option value="bulanan">Bulanan</option>
-            </select>
-        </div>
-
-        <div id="harian-fields" class="form-group mb-3">
-            <label for="tanggal">Tanggal:</label>
-            <input type="date" name="tanggal" id="tanggal" class="form-control">
-        </div>
-        <div id="bulanan-fields" class="form-group mb-3" style="display: none;">
-            <label for="bulan">Bulan:</label>
-            <select name="bulan" id="bulan" class="form-control" required>
-                @foreach ($bulanTahun as $item)
-                    @php
-                        $bulan = (int) $item->bulan;
-                    @endphp
-                    <option value="{{ $bulan }}">
-                        {{ \Carbon\Carbon::create()->month($bulan)->translatedFormat('F') }}
-                    </option>
-                @endforeach
-            </select>
-
-            <label for="tahun" class="mt-2">Tahun:</label>
-            <select name="tahun" id="tahun" class="form-control" required>
-                @foreach ($bulanTahun->pluck('tahun')->unique() as $tahun)
-                    <option value="{{ $tahun }}">{{ $tahun }}</option>
-                @endforeach
-            </select>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Download</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-
     <script>
       // Event listener untuk membuka modal dan mengisi data di dalam modal
       const editModal = document.getElementById('editModal');
@@ -373,9 +350,11 @@
 
             const tanggalInput = document.getElementById('tanggal');
             const bulanSelect = document.getElementById('bulan');
-            const tahunSelect = document.getElementById('tahun');
 
-            if(filterType === 'harian') {
+            if (filterType === 'semua') {
+                harianFields.style.display = 'none';
+                bulananFields.style.display = 'none';
+            } else if (filterType === 'harian') {
                 harianFields.style.display = 'block';
                 bulananFields.style.display = 'none';
 
@@ -402,6 +381,25 @@
 
         function printTransaction(paymentId) {
             window.open('{{ route("print", ":id") }}'.replace(':id', paymentId), '_blank');
+        }
+
+        function filter(){
+            const filterType = document.getElementById('filter_type').value;
+            const tanggalInput = document.getElementById('tanggal').value;
+            const bulanSelect = document.getElementById('bulan').value;
+            if(filterType === "semua"){
+                    window.open('{{ route("list") }}', "_self");
+            } else if (filterType == "harian"){
+                if (tanggalInput !== ""){
+                    let url = `/list?type=${filterType}&tanggal=${tanggalInput}`;
+                    window.open(url, '_self');
+                }
+            } else {
+                if(bulanSelect !== "Bulan"){
+                    let url = `/list?type=${filterType}&bulan=${bulanSelect}`;
+                    window.open(url, '_self');
+                }
+            }
         }
     </script>
 

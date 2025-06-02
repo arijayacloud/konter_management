@@ -337,3 +337,136 @@
     </script>
 
 @endsection
+
+
+public function list(Request $request)
+{
+    $userId = session('user_id');
+    $user = User::find($userId);
+
+    if (!$user) {
+        abort(403, 'User tidak ditemukan');
+    }
+
+    $type     = $request->input('type');
+    $tanggal  = $request->input('tanggal'); // ex: 2025-06-02
+    $bulan    = (int) $request->input('bulan'); // ex: 6 (pastikan integer)
+    $keyword  = strtolower($request->input('keyword'));
+
+    // Default query
+    $query = Payment::where('user_id', $userId);
+
+    // Filter pencarian
+    if ($keyword) {
+        $query->where(function ($q) use ($keyword) {
+            $q->whereRaw('LOWER(jenis_layanan) LIKE ?', ["%{$keyword}%"])
+              ->orWhereRaw('LOWER(nama_bank) LIKE ?', ["%{$keyword}%"])
+              ->orWhereRaw('LOWER(nomor_rekening) LIKE ?', ["%{$keyword}%"])
+              ->orWhereRaw('LOWER(atas_nama) LIKE ?', ["%{$keyword}%"])
+              ->orWhereRaw('LOWER(jumlah_transfer) LIKE ?', ["%{$keyword}%"])
+              ->orWhereRaw('LOWER(admin_transfer) LIKE ?', ["%{$keyword}%"]);
+        });
+    }
+
+    // Filter tanggal/bulan
+    if ($type === "harian" && $tanggal) {
+        $query->whereDate('tanggal', $tanggal);
+    } elseif ($type === "bulanan" && $bulan) {
+        $query->whereRaw('EXTRACT(MONTH FROM tanggal) = ?', [$bulan]);
+    }
+
+    $payments = $query->paginate(10);
+
+    // Hitung total transfer
+    $totalPayment = $payments->sum(function ($payment) {
+        $string = $payment->jumlah_transfer;
+        $clean  = str_replace(['Rp', '.', ','], '', $string);
+        return (int) $clean;
+    });
+
+    $paymentsCount = Payment::where('user_id', $userId)->count();
+
+    $uniqueNamesCount = Payment::where('user_id', $userId)
+        ->distinct('atas_nama')
+        ->count('atas_nama');
+
+    $bulanTahun = Payment::where('user_id', $userId)
+        ->selectRaw("DISTINCT EXTRACT(YEAR FROM tanggal) AS tahun, EXTRACT(MONTH FROM tanggal) AS bulan")
+        ->orderByDesc('tahun')
+        ->orderByDesc('bulan')
+        ->get();
+
+    return view('list', compact(
+        'payments',
+        'nama_konter',
+        'paymentsCount',
+        'totalPayment',
+        'uniqueNamesCount',
+        'bulanTahun'
+    ));
+}
+
+
+public function export(Request $request)
+{
+    $userId = session('user_id');
+    $query = Payment::where('user_id', $userId);
+
+    $keyword = strtolower($request->input('keyword'));
+    if ($keyword) {
+        $query->where(function ($q) use ($keyword) {
+            $q->whereRaw('LOWER(jenis_layanan) LIKE ?', ["%{$keyword}%"])
+              ->orWhereRaw('LOWER(nama_bank) LIKE ?', ["%{$keyword}%"])
+              ->orWhereRaw('LOWER(nomor_rekening) LIKE ?', ["%{$keyword}%"])
+              ->orWhereRaw('LOWER(atas_nama) LIKE ?', ["%{$keyword}%"])
+              ->orWhereRaw('LOWER(jumlah_transfer) LIKE ?', ["%{$keyword}%"])
+              ->orWhereRaw('LOWER(admin_transfer) LIKE ?', ["%{$keyword}%"]);
+        });
+    }
+
+    $type = $request->input('type');
+    $tanggal = $request->input('tanggal');
+    $bulan = (int) $request->input('bulan');
+
+    if ($type === "harian" && $tanggal) {
+        $query->whereDate('tanggal', $tanggal);
+    } elseif ($type === "bulanan" && $bulan) {
+        $query->whereRaw('EXTRACT(MONTH FROM tanggal) = ?', [$bulan]);
+    }
+
+    $payments = $query->get();
+
+    // Lanjutkan proses export, misal pake package Laravel Excel
+    // Contoh sederhana export CSV:
+    $csvData = [];
+    $csvData[] = ['Jenis Layanan', 'Nama Bank', 'Nomor Rekening', 'Atas Nama', 'Jumlah Transfer', 'Tanggal'];
+
+    foreach ($payments as $p) {
+        $csvData[] = [
+            $p->jenis_layanan,
+            $p->nama_bank,
+            $p->nomor_rekening,
+            $p->atas_nama,
+            $p->jumlah_transfer,
+            $p->tanggal->format('Y-m-d'),
+        ];
+    }
+
+    $filename = 'payments_export_' . date('Ymd_His') . '.csv';
+
+    // Kirim header CSV
+    $handle = fopen('php://memory', 'r+');
+    foreach ($csvData as $row) {
+        fputcsv($handle, $row);
+    }
+    rewind($handle);
+
+    return response()->streamDownload(function() use ($handle) {
+        fpassthru($handle);
+    }, $filename, [
+        'Content-Type' => 'text/csv',
+        'Content-Disposition' => "attachment; filename=\"$filename\"",
+    ]);
+}
+
+

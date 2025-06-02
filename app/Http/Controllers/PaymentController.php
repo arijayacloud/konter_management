@@ -112,21 +112,23 @@ class PaymentController extends Controller
         ]);
         $mpdf->WriteHTML($html);
 
-        return response($mpdf->Output('', 'I')) // 'I' = inline preview
-        ->header('Content-Type', 'application/pdf');
+        // return response($mpdf->Output('', 'I')) // 'I' = inline preview
+        // ->header('Content-Type', 'application/pdf');
 
-        // Return file as download
-        // return response($mpdf->Output('', 'S')) // Return as string
-        //     ->header('Content-Type', 'application/pdf')
-        //     ->header('Content-Disposition', 'inline; filename="struk-transaction-' . $id . '.pdf"');
+        $pdfContent = $mpdf->Output('', 'S'); // << Simpan sekali aja
+
+        return response($pdfContent)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="struk-transaction-' . $id . '.pdf"')
+            ->header('Content-Length', strlen($pdfContent));
     }
 
-    public function downloadMutasi(Request $request){
+    public function export(Request $request){
 
+        $type = $request->input('type');
         $user = User::find(session('user_id'));
-        $filterType = $request->input('filter_type');
 
-        if ($filterType === 'harian') {
+        if ($type === 'harian') {
             $request->validate([
                 'tanggal' => 'required|date',
             ]);
@@ -135,20 +137,19 @@ class PaymentController extends Controller
             $mutasi = Payment::where('user_id', $user->id)
                 ->whereDate('tanggal', $tanggal)
                 ->get();
-        } elseif ($filterType === 'bulanan') {
+        } elseif ($type === 'bulanan') {
             $request->validate([
                 'bulan' => 'required|integer|min:1|max:12',
-                'tahun' => 'required|integer|min:2000',
             ]);
             $bulan = $request->input('bulan');
-            $tahun = $request->input('tahun');
 
             $mutasi = Payment::where('user_id', $user->id)
-                ->whereYear('tanggal', $tahun)
-                ->whereMonth('tanggal', $bulan)
+                ->whereRaw('EXTRACT(MONTH FROM tanggal) = ?', [$bulan])
                 ->get();
         } else {
-            abort(400, 'Filter type tidak valid');
+            //return redirect()->route("list")->with('error', 'Filter type tidak valid');
+            $mutasi = Payment::where('user_id', $user->id)
+                ->get();
         }
 
         $mutasi = $mutasi->map(function($item) use ($user) {
@@ -164,7 +165,7 @@ class PaymentController extends Controller
         });
 
         if ($mutasi->isEmpty()) {
-        // Kalau datanya kosong, redirect balik dengan pesan error
+            // Kalau datanya kosong, redirect balik dengan pesan error
             return redirect()->route("list")->with('error', 'Data mutasi tidak ditemukan untuk filter yang dipilih.');
         }
 

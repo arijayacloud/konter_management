@@ -105,8 +105,6 @@ class AuthController extends Controller
             // Jika tidak ada pencarian, ambil semua data
             $payments = Payment::where('user_id', $userId)->paginate(10);
         }
-        // $payments = Payment::all();  // Ambil semua data pembayaran dari database
-        // $payments = Payment::paginate(1);
 
         $user = User::find($userId);
 
@@ -138,6 +136,22 @@ class AuthController extends Controller
             ->orderByDesc('tahun')
             ->orderByDesc('bulan')
             ->get();
+
+
+        $type = $request->input('type');  // 'search' adalah nama parameter query dari input form
+        $tanggal = $request->input('tanggal');  // 'search' adalah nama parameter query dari input form
+        $bulan = (int) $request->input('bulan');  // 'search' adalah nama parameter query dari input form
+        if($type){
+            if($type == "harian"){
+                $payments = Payment::where('user_id', $user->id)
+                    ->whereDate('tanggal', $tanggal)
+                    ->paginate(10);
+            }else{
+                $payments = Payment::where('user_id', $user->id)
+                    ->whereRaw('EXTRACT(MONTH FROM tanggal) = ?', [$bulan])
+                    ->paginate(10);
+            }
+        }
 
         return view('list', compact('nama_konter', 'payments', 'paymentsCount', 'totalPayment', 'uniqueNamesCount', 'bulanTahun'));
     }

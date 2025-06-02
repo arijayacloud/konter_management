@@ -66,6 +66,11 @@
         }
     }
 
+    @media (max-width: 576px) {
+      #formWrapper {
+          margin-top: 20px;
+      }
+    }
 
     /* Mobile styling */
     @media (max-width: 767.98px) {
@@ -73,9 +78,6 @@
         display: none;
       }
 
-      #formWrapper {
-          margin-top: 20px;
-      }
         #addButton {
             display: none;
         }
@@ -149,7 +151,8 @@
         }
 
         main.content main #rowInfo {
-            display: none;
+            display: flex;
+            flex-direction: column;
         }
     }
 
@@ -184,8 +187,6 @@
 
     main.content {
       padding: 0;
-      height: 100dvh;
-      overflow: hidden;
     }
   </style>
 </head>
