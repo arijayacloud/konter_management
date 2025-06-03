@@ -51,8 +51,8 @@
 
 <div class="wrapper">
     <div style="margin: 5px 0px;">
-        <h2 style="margin-bottom: 5px; ">{{ $nama_konter }}</h2>
-        <p>{{ $lokasi }}</p>
+        <h2 style="margin-bottom: 5px; ">{{ strtoupper($nama_konter) }}</h2>
+        <p>{{ strtoupper($lokasi) }}</p>
     </div>
 
     <hr>

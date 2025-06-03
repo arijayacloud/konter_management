@@ -187,6 +187,7 @@
 
     main.content {
       padding: 0;
+      min-height: 100dvh;
     }
   </style>
 </head>

@@ -140,11 +140,15 @@ class PaymentController extends Controller
         } elseif ($type === 'bulanan') {
             $request->validate([
                 'bulan' => 'required|integer|min:1|max:12',
+                'tahun' => 'required|integer|min:1900|max:' . date('Y'),
             ]);
+
             $bulan = $request->input('bulan');
+            $tahun = $request->input('tahun');
 
             $mutasi = Payment::where('user_id', $user->id)
-                ->whereRaw('EXTRACT(MONTH FROM tanggal) = ?', [$bulan])
+                ->whereMonth('tanggal', $bulan)   // pakai whereMonth biar lebih readable
+                ->whereYear('tanggal', $tahun)    // filter tahun juga supaya tepat
                 ->get();
         } else {
             //return redirect()->route("list")->with('error', 'Filter type tidak valid');
@@ -158,6 +162,7 @@ class PaymentController extends Controller
                 'jenis_layanan' => $item->jenis_layanan,
                 'lokasi_konter' => $user->nama_konter,   // kolom tambahan dari user
                 'nama_bank' => $item->nama_bank,
+                'nomor_rekening' => $item->nomor_rekening,
                 'atas_nama' => $item->atas_nama,
                 'jumlah_transfer' => $item->jumlah_transfer,
                 'admin_transfer' => $item->admin_transfer,

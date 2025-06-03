@@ -12,7 +12,7 @@
                       </div>
                       <div class="">
                         <h5 class="card-title mb-0">Total Transaction</h5>
-                        <small class="text-muted">From store transaction</small>
+                        <small class="text-muted">Calculated from the total number of transactions</small>
                       </div>
                     </div>
                     <hr />
@@ -27,12 +27,12 @@
                 <div class="border-start border-primary border-5 card shadow-md h-100 border-0 justify-content-between">
                   <div class="m-3 mb-0">
                     <div class="d-flex align-items-center mb-3">
-                      <div class="bg-danger-subtle text-danger rounded px-3 py-2 me-3">
+                      <div class="bg-primary-subtle text-primary rounded px-3 py-2 me-3">
                         <i class="bi bi-bank fs-4"></i>
                       </div>
                       <div class="">
                         <h5 class="card-title mb-0">Admin Transfers</h5>
-                        <small class="text-muted">Total from admin transfer</small>
+                        <small class="text-muted">Calculated from the total cost of the transfer admin</small>
                       </div>
                     </div>
                     <hr />
@@ -68,12 +68,6 @@
               </div>
             </div>
 
-            @if(session('error'))
-                <div class="alert alert-danger mt-4 mx-2" role="alert">
-                    {{ session('error') }}
-                </div>
-            @endif
-
             <form class="d-flex justify-content-center gap-2 mt-4 px-3" onchange="filter();">
                         <div class="">
                             <select class="form-select" id="filter_type" aria-label="Default select example" onchange="toggleDateFields();">
@@ -86,18 +80,27 @@
                         <div id="harian-fields" class="form-group " style="display: none;">
                             <input type="date" name="tanggal" id="tanggal" class="form-control">
                         </div>
-                        <div id="bulanan-fields" class="form-group" style="display: none;">
+                        <div id="bulanan-fields" class="form-group gap-2" style="display: none;">
                             <select name="bulan" id="bulan" class="form-control" required>
                                 <option selected disabled>
                                     Bulan
                                 </option>
-                                @foreach ($bulanTahun as $item)
+                                @foreach ($bulanan["bulan"] as $item)
                                     @php
-                                        $bulan = (int) $item->bulan;
+                                        $bulan = (int) $item;
                                     @endphp
                                     <option value="{{ $bulan }}">
                                         {{ \Carbon\Carbon::create()->month($bulan)->translatedFormat('F') }}
                                     </option>
+                                @endforeach
+                            </select>
+                            <!-- Dropdown Tahun -->
+                            <select name="tahun" id="tahun" class="form-control" required>
+                                <option selected disabled>
+                                    Tahun
+                                </option>
+                                @foreach ($bulanan["tahun"]->pluck('tahun')->unique() as $tahun)
+                                    <option value="{{ $tahun }}">{{ $tahun }}</option>More actions
                                 @endforeach
                             </select>
                         </div>
@@ -153,7 +156,7 @@
                       </div>
                     </td>
                     <td>{{ $payment->jenis_layanan }}</td>
-                    <td>{{ $nama_konter }}</td>
+                    <td>{{ strtoupper($nama_konter) }}</td>
                     <td>{{ $payment->nama_bank }}</td>
                     <td>{{ $payment->nomor_rekening }}</td>
                     <td>{{ $payment->atas_nama }}</td>
@@ -364,7 +367,7 @@
                 //tahunSelect.required = false;
             } else {
                 harianFields.style.display = 'none';
-                bulananFields.style.display = 'block';
+                bulananFields.style.display = 'flex';
 
                 // Set required atribut sesuai aktif
                 //tanggalInput.required = false;
@@ -387,6 +390,8 @@
             const filterType = document.getElementById('filter_type').value;
             const tanggalInput = document.getElementById('tanggal').value;
             const bulanSelect = document.getElementById('bulan').value;
+            const tahunSelect = document.getElementById('tahun').value;
+
             if(filterType === "semua"){
                     window.open('{{ route("list") }}', "_self");
             } else if (filterType == "harian"){
@@ -395,8 +400,8 @@
                     window.open(url, '_self');
                 }
             } else {
-                if(bulanSelect !== "Bulan"){
-                    let url = `/list?type=${filterType}&bulan=${bulanSelect}`;
+                if(bulanSelect !== "Bulan" && tahunSelect !== "Tahun"){
+                    let url = `/list?type=${filterType}&bulan=${bulanSelect}&tahun=${tahunSelect}`;
                     window.open(url, '_self');
                 }
             }

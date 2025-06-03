@@ -25,7 +25,13 @@ class AuthController extends Controller
             'password' => 'required|string|min:6',
         ]);
 
-        $data = [ 'nama_konter' => $request->nama_konter, 'lokasi' => $request->lokasi, 'email' => $request->email, 'password' => Hash::make($request->password) ];
+        // $data = [ 'nama_konter' => $request->nama_konter, 'lokasi' => $request->lokasi, 'email' => $request->email, 'password' => Hash::make($request->password) ];
+        $data = [
+            'nama_konter' => strtoupper($request->nama_konter),
+            'lokasi' => strtoupper($request->lokasi),
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ];
         try {
             $user = User::create($data);
             return redirect()->route('login');
@@ -112,9 +118,9 @@ class AuthController extends Controller
         $paymentsCount = Payment::where('user_id', $userId)->count();
 
         $totalPayment = 0;
-        foreach ($payments as $payment) {
+        foreach (Payment::where('user_id', $userId)->get() as $payment) {
             // Ambil nilai jumlah_transfer yang disimpan sebagai string (misalnya "Rp 1.000.000")
-            $paymentString = $payment->jumlah_transfer;
+            $paymentString = $payment->admin_transfer;
 
             // Bersihkan simbol 'Rp' dan hapus koma (jika ada)
             $cleanedPayment = str_replace(['Rp', '.', ','], '', $paymentString);
@@ -130,17 +136,29 @@ class AuthController extends Controller
             ->distinct('atas_nama')
             ->count('atas_nama');
 
+        // $tahun = Payment::where('user_id', $userId)
+        //     ->selectRaw("DISTINCT EXTRACT(YEAR FROM tanggal) AS tahun, EXTRACT(MONTH FROM tanggal) AS bulan")
+        //     ->orderByDesc('tahun')
+        //     ->orderByDesc('bulan')
+        //     ->get();
 
-        $bulanTahun = Payment::where('user_id', $userId)
-            ->selectRaw("DISTINCT EXTRACT(YEAR FROM tanggal) AS tahun, EXTRACT(MONTH FROM tanggal) AS bulan")
+        $tahun = Payment::where('user_id', $userId)
+            ->selectRaw("DISTINCT EXTRACT(YEAR FROM tanggal) AS tahun")
             ->orderByDesc('tahun')
-            ->orderByDesc('bulan')
             ->get();
 
+        $bulan = Payment::where('user_id', $userId)
+            ->selectRaw("DISTINCT EXTRACT(MONTH FROM tanggal) AS bulan")
+            ->orderByRaw("EXTRACT(MONTH FROM tanggal)")
+            ->pluck('bulan'); // hasilnya Collection of int
+
+        $bulanan = [ 'bulan' => $bulan, 'tahun' => $tahun];
 
         $type = $request->input('type');  // 'search' adalah nama parameter query dari input form
         $tanggal = $request->input('tanggal');  // 'search' adalah nama parameter query dari input form
         $bulan = (int) $request->input('bulan');  // 'search' adalah nama parameter query dari input form
+        $tahun = (int) $request->input('tahun');  // 'search' adalah nama parameter query dari input form
+
         if($type){
             if($type == "harian"){
                 $payments = Payment::where('user_id', $user->id)
@@ -149,10 +167,11 @@ class AuthController extends Controller
             }else{
                 $payments = Payment::where('user_id', $user->id)
                     ->whereRaw('EXTRACT(MONTH FROM tanggal) = ?', [$bulan])
+                    ->whereRaw('EXTRACT(YEAR FROM tanggal) = ?', [$tahun]) // <= INI YANG KURANG
                     ->paginate(10);
             }
         }
 
-        return view('list', compact('nama_konter', 'payments', 'paymentsCount', 'totalPayment', 'uniqueNamesCount', 'bulanTahun'));
+        return view('list', compact('nama_konter', 'payments', 'paymentsCount', 'totalPayment', 'uniqueNamesCount', 'bulanan'));
     }
 }

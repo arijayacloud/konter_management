@@ -34,6 +34,7 @@ class MutasiExport implements FromCollection, WithHeadings, WithStyles, ShouldAu
             'JENIS LAYANAN',
             'LOKASI KONTER',
             'NAMA BANK',
+            'NOMOR REKENING',
             'ATAS NAMA',
             'JUMLAH TRANSFER',
             'ADMIN TRANSFER',
