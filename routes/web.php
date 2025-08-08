@@ -15,6 +15,8 @@ Route::middleware([AuthCustom::class])->group(function(){
     Route::delete('/payments/{id}', [PaymentController::class, 'destroy'])->name('destroy');
     Route::put('/payments', [PaymentController::class, 'update'])->name('update');
     Route::get('/', function () { return view('auth.login'); });
+    Route::get('/create-from-payment/{id}', [PaymentController::class, 'createFromPayment'])
+     ->name('payment.createFromId');
 });
 
 Route::middleware([RedirectIfAuthenticatedCustom::class])->group(function(){
