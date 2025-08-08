@@ -176,4 +176,35 @@ class PaymentController extends Controller
 
         return Excel::download(new MutasiExport($mutasi), 'mutasi.xlsx');
     }
+    
+    
+    public function createFromPayment(Request $request, $id)
+    {
+        // Ambil serial number dari request atau buat baru
+        $serial = $request->serial_number;
+        if (!$serial) {
+            do {
+                $serial = str_pad(random_int(0, 99999999), 8, '0', STR_PAD_LEFT);
+            } while (Payment::where('serial_number', $serial)->exists());
+        }
+    
+        // Ambil data payment berdasarkan ID
+        $payment = Payment::findOrFail($id);
+    
+        // Ambil semua atribut jadi array
+        $data = $payment->toArray();
+    
+        // Hapus kolom id
+        unset($data['id']);
+    
+        // Set kolom serial_number dengan yang baru
+        $data['serial_number'] = $serial;
+    
+        // Duplikat data ke record baru
+        Payment::create($data);
+    
+        return redirect()->back()->with('success', 'Data baru berhasil dibuat!');
+    }
+
+    
 }
