@@ -2,47 +2,47 @@
 
 @section('content')
     <main class="container-fluid flex flex-column" >
-        <div id="rowInfo" class="gap-4 mb-4">
-            <div class="col">
-                <div class="border-start border-primary border-5 card justify-content-between shadow-md h-100 border-0">
-                  <div class="m-3 mb-0">
-                    <div class="d-flex align-items-center mb-3">
-                      <div class="bg-primary-subtle text-primary rounded px-3 py-2 me-3">
-                        <i class="bi bi-cash-stack fs-4"></i>
-                      </div>
-                      <div class="">
-                        <h5 class="card-title mb-0">Total Transaction</h5>
-                        <small class="text-muted">Calculated from the total number of transactions</small>
-                      </div>
-                    </div>
-                    <hr />
-                    <h2 class="fw-bold text-dark">{{ $paymentsCount }}</h2>
-                  </div>
-                  <div class="w-100 h-[40px] bg-light">
-                  </div>
-                </div>
-              </div>
+        <!--<div id="rowInfo" class="gap-4 mb-4">-->
+        <!--    <div class="col">-->
+        <!--        <div class="border-start border-primary border-5 card justify-content-between shadow-md h-100 border-0">-->
+        <!--          <div class="m-3 mb-0">-->
+        <!--            <div class="d-flex align-items-center mb-3">-->
+        <!--              <div class="bg-primary-subtle text-primary rounded px-3 py-2 me-3">-->
+        <!--                <i class="bi bi-cash-stack fs-4"></i>-->
+        <!--              </div>-->
+        <!--              <div class="">-->
+        <!--                <h5 class="card-title mb-0">Total Transaction</h5>-->
+        <!--                <small class="text-muted">Calculated from the total number of transactions</small>-->
+        <!--              </div>-->
+        <!--            </div>-->
+        <!--            <hr />-->
+        <!--            <h2 class="fw-bold text-dark">{{ $paymentsCount }}</h2>-->
+        <!--          </div>-->
+        <!--          <div class="w-100 h-[40px] bg-light">-->
+        <!--          </div>-->
+        <!--        </div>-->
+        <!--      </div>-->
 
-            <div class="col">
-                <div class="border-start border-primary border-5 card shadow-md h-100 border-0 justify-content-between">
-                  <div class="m-3 mb-0">
-                    <div class="d-flex align-items-center mb-3">
-                      <div class="bg-primary-subtle text-primary rounded px-3 py-2 me-3">
-                        <i class="bi bi-bank fs-4"></i>
-                      </div>
-                      <div class="">
-                        <h5 class="card-title mb-0">Admin Transfers</h5>
-                        <small class="text-muted">Calculated from the total cost of the transfer admin</small>
-                      </div>
-                    </div>
-                    <hr />
-                    <h2 class="fw-bold text-dark">Rp {{ number_format($totalPayment, 0, ',', '.') }}</h2>
-                  </div>
-                  <div class="w-100 h-[40px] bg-light">
-                  </div>
-                </div>
-              </div>
-        </div>
+        <!--    <div class="col">-->
+        <!--        <div class="border-start border-primary border-5 card shadow-md h-100 border-0 justify-content-between">-->
+        <!--          <div class="m-3 mb-0">-->
+        <!--            <div class="d-flex align-items-center mb-3">-->
+        <!--              <div class="bg-primary-subtle text-primary rounded px-3 py-2 me-3">-->
+        <!--                <i class="bi bi-bank fs-4"></i>-->
+        <!--              </div>-->
+        <!--              <div class="">-->
+        <!--                <h5 class="card-title mb-0">Admin Transfers</h5>-->
+        <!--                <small class="text-muted">Calculated from the total cost of the transfer admin</small>-->
+        <!--              </div>-->
+        <!--            </div>-->
+        <!--            <hr />-->
+        <!--            <h2 class="fw-bold text-dark">Rp {{ number_format($totalPayment, 0, ',', '.') }}</h2>-->
+        <!--          </div>-->
+        <!--          <div class="w-100 h-[40px] bg-light">-->
+        <!--          </div>-->
+        <!--        </div>-->
+        <!--      </div>-->
+        <!--</div>-->
 
         <div class="bg-white shadow-md rounded-3 grow-1 rounded-2 overflow-hidden">
           <div class="d-flex flex-column h-100">
@@ -153,6 +153,13 @@
                         <button class="btn btn-sm btn-outline-secondary" title="Print" onclick="printTransaction({{ $payment->id }})">
                           <i class="bi bi-printer"></i>
                         </button>
+                        <a class="btn btn-sm btn-outline-warning" href="{{ route('payment.createFromId', $payment->id) }}" 
+                           class="btn btn-primary rounded-circle" 
+                           style="width:40px; height:40px; display:flex; align-items:center; justify-content:center;" 
+                           target="_blank" 
+                           title="Salin">
+                            <i class="bi bi-plus-lg"></i>
+                        </a>
                       </div>
                     </td>
                     <td>{{ $payment->jenis_layanan }}</td>
